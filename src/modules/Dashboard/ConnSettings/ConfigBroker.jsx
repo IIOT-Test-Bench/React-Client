@@ -1,8 +1,41 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import generateID from '../../HelperFunctions/generateClientId'
 
 const ConfigBroker = () => {
   const [randId, setRandId] = useState("");
+  const [connStatus, setConnStatus] = useState(false);
+  const [connStatusText, setConnStatusText] = useState("Connect");
+  const [statusCode, setStatusCode] = useState("info");
+
+  useEffect(() => {
+    switch(connStatus){
+      case false:
+        setConnStatusText("Connect");
+        setStatusCode("info");
+        break;
+        case true:
+          setConnStatusText("Disconnect");
+          setStatusCode("success");
+          break;
+      default:
+  
+    }
+  
+  
+    return () => {
+      
+    }
+  }, [connStatus])
+  
+
+  const handleConnect = () => {
+    // console.log(connStatus)
+    if(connStatus){
+      setConnStatus(false);
+    }else{
+      setConnStatus(true);
+    }
+  }
 
   let getID = true;
 
@@ -23,7 +56,7 @@ const ConfigBroker = () => {
         <div className='m-4'>
         <div className='row my-5'>
         <h2 className='col'>Configure Connection</h2>
-        <button type="button" className="btn btn-success col-md-3 col-lg-2">Connected</button>
+        <button type="button" id="connStatus" className={`btn btn-${statusCode} col-md-3 col-lg-2`} onClick={handleConnect}>{connStatusText}</button>
         </div>
         <form>
           <fieldset className='border p-2 my-2'>
