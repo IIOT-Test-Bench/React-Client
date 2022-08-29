@@ -6,16 +6,20 @@ const ConfigBroker = () => {
   const [connStatus, setConnStatus] = useState(false);
   const [connStatusText, setConnStatusText] = useState("Connect");
   const [statusCode, setStatusCode] = useState("info");
+  const [connState, setconnState] = useState("Disconnected");
+
 
   useEffect(() => {
     switch(connStatus){
       case false:
         setConnStatusText("Connect");
         setStatusCode("info");
+        setconnState("Disconnected");
         break;
         case true:
           setConnStatusText("Disconnect");
           setStatusCode("success");
+          setconnState("Connected");
           break;
       default:
   
@@ -29,11 +33,14 @@ const ConfigBroker = () => {
   
 
   const handleConnect = () => {
+    console.log(document.querySelector("#connState").innerHTML)
     // console.log(connStatus)
     if(connStatus){
       setConnStatus(false);
+      
     }else{
       setConnStatus(true);
+      setconnState("Disconnected");
     }
   }
 
@@ -55,7 +62,7 @@ const ConfigBroker = () => {
         
         <div className='m-4'>
         <div className='row my-5'>
-        <h2 className='col'>Configure Connection</h2>
+        <h2 className='col'>Configure Connection : <span id="connState" style={{color: "orange", fontSize: "0.7em"}}>{connState}</span></h2>
         <button type="button" id="connStatus" className={`btn btn-${statusCode} col-md-3 col-lg-2`} onClick={handleConnect}>{connStatusText}</button>
         </div>
         <form>
@@ -72,14 +79,14 @@ const ConfigBroker = () => {
                 <div className="col-md-4" >
                 <label htmlFor="port" className="col col-form-label">Port</label>
                 <div className="col">
-                <input type="number" className="form-control" id="port" placeholder="5000" />
+                <input type="number" className="form-control" id="port" defaultValue={"5000"} />
                 </div>
                 </div>
 
                 <div className="col-md-2" >
                 <label htmlFor="timeout" className="col col-form-label">Timeout</label>
                 <div className="col">
-                <input type="number" className="form-control" id="timeout" placeholder="Timeout" />
+                <input type="number" className="form-control" id="timeout" defaultValue={"4000"} />
                 </div>
                 </div>
             </div>

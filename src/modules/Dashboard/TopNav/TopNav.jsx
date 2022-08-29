@@ -11,12 +11,8 @@ const TopNav = () => {
                 <div className="d-none d-sm-block topbar-divider"></div>
                     <li className="nav-item dropdown no-arrow" role="presentation">
                         <div className="nav-item dropdown no-arrow">
-                          <Link className="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" to="#"><span className="d-none d-lg-inline mr-2 text-gray-600 small">IIOT Test</span></Link>
-                            <div className="dropdown-menu shadow dropdown-menu-right animated--grow-in" role="menu">
-                                    <Link className="dropdown-item" role="presentation" to="/"><i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Profile</Link>
-                                    <div className="dropdown-divider"></div>
-                                    <Link className="dropdown-item" role="presentation" to="index"><i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Logout</Link></div>
-                            </div>
+                          <Link className="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" to="/"><span className="d-none d-lg-inline mr-2 text-gray-600 small">Go to Homepage</span></Link>
+                        </div>
                     </li>
             </ul>
         </div>
