@@ -13,17 +13,41 @@ const ConfigPubSub = () => {
                     <p class="card-text">
                         <form>
                             <div class="form-group row">
-                                <label for="pubsub" class="col-sm-2 col-form-label">pubsub</label>
-                                <div class="col-sm-10">
-                                <input type="text" class="form-control" id="pubsub" placeholder="pubsub" />
-                                </div>
+                            <div className="col-md-4" >
+                            <label htmlFor="pubnum" className="col col-form-label">No. Limit</label>
+                            <div className="col">
+                            <input type="number" className="form-control" id="pubnum" defaultValue={"20"} />
                             </div>
-                            <div class="form-group row mt-2">
-                                <label for="other" class="col-sm-2 col-form-label">Other</label>
-                                <div class="col-sm-10">
-                                <input type="text" class="form-control" id="other" placeholder="Other" />
-                                </div>
                             </div>
+
+                            <div className="col-md-4" >
+                            <label htmlFor="msgsize" className="col col-form-label">Message Size (mb)</label>
+                            <div className="col">
+                            <input type="number" className="form-control" id="msgsize" defaultValue={"1000"} />
+                            </div>
+                            </div>
+
+                            <div className="col-md-4" >
+                            <label htmlFor="topiclvl" className="col col-form-label">Topic Level</label>
+                            <div className="col">
+                            <select className="form-select" defaultValue={"0"} aria-label="Select protocol">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            </select>
+                            </div>
+                            </div>
+                            </div>
+
+                            <div class="form-group row">
+                            <div className="col-md-4" >
+                            <label htmlFor="host" className="col col-form-label">Msg Interval (sec)</label>
+                            <div className="col">
+                            <input type="text" className="form-control" id="host" defaultValue={"20"} />
+                            </div>
+                            </div>
+                            </div>
+
                     </form>
 
                     </p>
@@ -36,19 +60,27 @@ const ConfigPubSub = () => {
                 <div class="card-body">
                     <h5 class="card-title">Subscriber</h5>
                     <p class="card-text">
-                        <form>
+                    <form>
                             <div class="form-group row">
-                                <label for="pubsub" class="col-sm-2 col-form-label">pubsub</label>
-                                <div class="col-sm-10">
-                                <input type="text" class="form-control" id="pubsub" placeholder="pubsub" />
-                                </div>
+                            <div className="col-md-6" >
+                            <label htmlFor="pubnum" className="col col-form-label">No. Limit</label>
+                            <div className="col">
+                            <input type="number" className="form-control" id="pubnum" defaultValue={"20"} />
                             </div>
-                            <div class="form-group row mt-2">
-                                <label for="other" class="col-sm-2 col-form-label">Other</label>
-                                <div class="col-sm-10">
-                                <input type="text" class="form-control" id="other" placeholder="Other" />
-                                </div>
                             </div>
+
+                            <div className="col-md-6" >
+                            <label htmlFor="topiclvl" className="col col-form-label">Topic Level</label>
+                            <div className="col">
+                            <select className="form-select" defaultValue={"0"} aria-label="Select protocol">
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            </select>
+                            </div>
+                            </div>
+                            </div>
+
                     </form>
 
                     </p>
