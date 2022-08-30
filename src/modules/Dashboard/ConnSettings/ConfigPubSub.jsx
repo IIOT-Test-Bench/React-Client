@@ -27,7 +27,7 @@ const ConfigPubSub = () => {
                             </div>
                             </div>
 
-                            <div className="col-md-4" >
+                            {/* <div className="col-md-4" >
                             <label htmlFor="topiclvl" className="col col-form-label">Topic Level</label>
                             <div className="col">
                             <select className="form-select" defaultValue={"0"} aria-label="Select protocol">
@@ -36,7 +36,7 @@ const ConfigPubSub = () => {
                             <option value="2">2</option>
                             </select>
                             </div>
-                            </div>
+                            </div> */}
                             </div>
 
                             <div class="form-group row">
@@ -69,7 +69,7 @@ const ConfigPubSub = () => {
                             </div>
                             </div>
 
-                            <div className="col-md-6" >
+                            {/* <div className="col-md-6" >
                             <label htmlFor="topiclvl" className="col col-form-label">Topic Level</label>
                             <div className="col">
                             <select className="form-select" defaultValue={"0"} aria-label="Select protocol">
@@ -78,7 +78,7 @@ const ConfigPubSub = () => {
                             <option value="2">2</option>
                             </select>
                             </div>
-                            </div>
+                            </div> */}
                             </div>
 
                     </form>

@@ -16,8 +16,8 @@ const PubAndSubscribe = () => {
                                     <input type="text" className="form-control" id="topic" placeholder="Enter the topic" />
                                     </div>
                                     </div>
-                                    <div className="col-md-4" >
-                                    <label htmlFor="QoS" className="col col-form-label">QoS</label>
+                                    {/* <div className="col-md-4" >
+                                    <label htmlFor="TopicLevel" className="col col-form-label">Topic Level</label>
                                     <div className="col">
                                         <select class="form-select" aria-label="Select protocol">
                                         <option selected value="0">0</option>
@@ -25,14 +25,14 @@ const PubAndSubscribe = () => {
                                         <option value="2">2</option>
                                         </select>
                                     </div>
-                                    </div>
+                                    </div> */}
                                     </div>
 
                                     <div className="form-group row">
                                     <div className="col" >
                                     <label htmlFor="message" className="col col-form-label">Message</label>
                                     <div className="col">
-                                    <input type="text" className="form-control" id="message" placeholder="Hi there" />
+                                    <textarea type="text" className="form-control" id="message" placeholder="Content of message"></textarea>
                                     </div>
                                     </div>
                                     </div>
@@ -70,8 +70,8 @@ const PubAndSubscribe = () => {
                                     </div>
                                     </div>
 
-                                    <div className="col-md-4" >
-                                    <label htmlFor="QoS" className="col col-form-label">QoS</label>
+                                    {/* <div className="col-md-4" >
+                                    <label htmlFor="TopicLevel" className="col col-form-label">Topic Level</label>
                                     <div className="col">
                                     <   select class="form-select" aria-label="Select protocol">
                                         <option selected value="0">0</option>
@@ -79,7 +79,7 @@ const PubAndSubscribe = () => {
                                         <option value="2">2</option>
                                         </select>
                                     </div>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                             <div class="modal-footer">
