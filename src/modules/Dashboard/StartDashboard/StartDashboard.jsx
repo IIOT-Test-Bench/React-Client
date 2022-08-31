@@ -1,12 +1,12 @@
 import React from 'react'
-import ConfigPubSub from '../ConnSettings/ConfigPubSub'
+import StartDashboard from '../ConnSettings/ConfigStartDashboard'
 import DashBase from '../DashBase/DashBase'
 
 const ConfigurePubSub = () => {
   return (
     <div>
         <DashBase>
-            <ConfigPubSub />
+            <StartDashboard />
         </DashBase>
     </div>
   )
