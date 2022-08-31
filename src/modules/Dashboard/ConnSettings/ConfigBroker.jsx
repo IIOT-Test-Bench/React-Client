@@ -43,7 +43,7 @@ const ConfigBroker = () => {
   //Connect to the broker on click or submission
   const handleConnect = async () => {
     try{
-      setconnState("loading");
+      setconnState("Loading...");
       let feedback = await connectBroker(host, port, randId, timeout, username, password);
       console.log(feedback);
       if(connStatus){
@@ -80,13 +80,15 @@ const ConfigBroker = () => {
         <form>
         <div className='row my-5'>
         <h2 className='col'>Configure Connection : <span id="connState" style={{color: "orange", fontSize: "0.7em"}}>{connState}</span> 
+        { connState === "Connected" ?
         <div className="spinner-grow mx-3" style={{width: "1.8rem", height: "1.8rem", color: "orange"}} role="status">
-        <span className="visually-hidden">Loading...</span>
+         <span className="visually-hidden">Loading...</span> 
         </div>
+        : ""}
         </h2>
         
         <button type="button" id="connStatus" className={`btn btn-${statusCode} col-md-3 col-lg-2`} onClick={handleConnect}>
-        {connState === "loading"? <span className="spinner-border spinner-border-sm mx-3" role="status" aria-hidden="true"></span> : ""}
+        {connState === "Loading..."? <span className="spinner-border spinner-border-sm mx-3" role="status" aria-hidden="true"></span> : ""}
         {connStatusText}
         </button>
         </div>
@@ -104,7 +106,7 @@ const ConfigBroker = () => {
                 <div className="col-md-4" >
                 <label htmlFor="port" className="col col-form-label">Port</label>
                 <div className="col">
-                <input type="number" className="form-control" id="port" defaultValue={"5000"} onChange={(e) => {setPort(e.target.value)}}/>
+                <input type="number" className="form-control" id="port" defaultValue={"1883"} onChange={(e) => {setPort(e.target.value)}}/>
                 </div>
                 </div>
 
@@ -147,7 +149,7 @@ const ConfigBroker = () => {
                 <div className="col-md-8" >
                 <label htmlFor="clientid" className="col col-form-label">Client Id</label>
                 <div className="col">
-                <input type="text" className="form-control" id="clientid" placeholder='Enter Client ID' defaultValue={getID? randId : ""} onChange={(e) => {setRandId(e.target.value)}}/>
+                <input type="text" className="form-control" id="clientid" placeholder='Enter Client ID' defaultValue={getID? randId : ""} onChange={(e) => {setRandId(e.target.value)}} />
                 </div>
                 </div>
                 <div className="col-md-4" >
