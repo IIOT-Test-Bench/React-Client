@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import generateID from '../../HelperFunctions/generateClientId'
-import { connectBroker } from '../../Settings/Store/SettingsCrud';
+import { connectBroker, disconnectBroker } from '../../Settings/Store/SettingsCrud';
 
 const ConfigBroker = () => {
+  //Store the current client
+  //Later would be added to redux store
+  const [currentClient, setCurrentClient] = useState("");
+
   //store random client id from the generator function 
   const [randId, setRandId] = useState("");
 
@@ -44,14 +48,26 @@ const ConfigBroker = () => {
   const handleConnect = async () => {
     try{
       setconnState("Loading...");
-      let feedback = await connectBroker(host, port, randId, timeout, username, password);
-      console.log(feedback);
-      if(connStatus){
-        setConnStatus(false); 
-        
+      
+      if(connStatus && (connState === "Connected")){
+        let feedback = await disconnectBroker(currentClient); 
+        console.log(feedback);
+        if(feedback.statusText === "OK"){
+          setConnStatus(false);
+          setconnState("Disconnected");
+        }        
       }else{
-        setConnStatus(true);
-        setconnState("Disconnected");
+        let feedback = await connectBroker(host, port, randId, timeout, username, password);
+        console.log(feedback);
+        if(feedback.statusText === "OK"){
+          setConnStatus(true);
+          setconnState("Connected");
+          setCurrentClient(randId);
+        }
+
+
+
+
       }
 
     }catch(e){

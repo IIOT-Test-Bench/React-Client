@@ -39,15 +39,6 @@ const ConfigPubSub = () => {
                             </div>
                             </div>
 
-                            <div class="form-group row">
-                            <div className="col-md-4" >
-                            <label htmlFor="host" className="col col-form-label">Msg Interval (sec)</label>
-                            <div className="col">
-                            <input type="text" className="form-control" id="host" defaultValue={"20"} />
-                            </div>
-                            </div>
-                            </div>
-
                     </form>
 
                     </p>

@@ -18,3 +18,16 @@ export const connectBroker = async (host, port, clientId, timeout, username, pas
         console.log(err)
     }
 }
+
+export const disconnectBroker = async (clientId) => {
+
+    try{
+        const result = await axios.post("http://localhost:3001/disconnect", {
+            clientId: clientId
+        })
+        return result;
+
+    }catch(err){
+        console.log(err)
+    }
+}
