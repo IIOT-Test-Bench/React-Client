@@ -1,8 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice } from "@reduxjs/toolkit";
+import mqtt from 'mqtt/dist/mqtt';
+
 
 const subscriber = createSlice({
     name: "subscriber",
     initialState: {
+        client: null,
         messages: [],
         numberlimit: 40,
     },
@@ -15,7 +18,8 @@ const subscriber = createSlice({
             const {numberlimit} = action.payload;
             state.numberlimit = numberlimit;
         }
-    }
+    },
+    extraReducers: {}
 });
 
  export const {addMessage, setNumberLimit} = subscriber.actions;

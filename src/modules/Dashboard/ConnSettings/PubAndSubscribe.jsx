@@ -1,7 +1,12 @@
-import React from 'react'
+import React, {useState} from 'react';
+import LoadingScreen from '../../IndexPage/LoadingScreen';
 
 const PubAndSubscribe = () => {
+    let client = true;
+
   return (
+    <>
+    {client ? <LoadingScreen /> :
     <div>
         <div className="row">
             <div className="col-sm-6">
@@ -116,6 +121,8 @@ const PubAndSubscribe = () => {
 
             </div>
     </div>
+    }
+    </>
   )
 }
 

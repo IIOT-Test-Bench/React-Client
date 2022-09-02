@@ -19,6 +19,23 @@ export const connectBroker = async (host, port, clientId, timeout, username, pas
     }
 }
 
+export const publishmsg = async ( clientId, topic, message ) => {
+    try{
+        const result = await axios.post("http://localhost:3001/publish", {
+            
+            clientId,
+            topic,
+            message,
+            
+        })
+        return result;
+
+    }catch(err){
+        console.log(err)
+    }
+
+}
+
 export const disconnectBroker = async (clientId) => {
 
     try{
