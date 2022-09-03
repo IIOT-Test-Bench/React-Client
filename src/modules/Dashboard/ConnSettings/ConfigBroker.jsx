@@ -1,8 +1,11 @@
-import React, { useState, useEffect } from 'react'
-import generateID from '../../HelperFunctions/generateClientId'
+import React, { useState, useEffect } from 'react';
+import generateID from '../../HelperFunctions/generateClientId';
 import { connectBroker, disconnectBroker } from '../../Settings/Store/SettingsCrud';
+import { useDispatch, useSelector } from 'react-redux';
+import {setClientId} from '../../Settings/Store/SettingsSlice';
 
 const ConfigBroker = () => {
+  const dispatch = useDispatch();
   //Store the current client
   //Later would be added to redux store
   const [currentClient, setCurrentClient] = useState("");
@@ -35,6 +38,7 @@ const ConfigBroker = () => {
           setConnStatusText("Disconnect");
           setStatusCode("success");
           setconnState("Connected");
+
           break;
       default:
   
@@ -63,6 +67,8 @@ const ConfigBroker = () => {
           setConnStatus(true);
           setconnState("Connected");
           setCurrentClient(randId);
+          dispatch(setClientId(currentClient));
+
         }
 
 

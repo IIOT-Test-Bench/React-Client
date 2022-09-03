@@ -40,9 +40,12 @@ const settings = createSlice({
             const {clientid} = action.payload;
             state.clientid = clientid;
         }
+    },
+    extraReducers: {
+
     }
 });
 
- export const {addMessage, setNumberLimit} = settings.actions;
+ export const {setClientId} = settings.actions;
 
 export default settings;
