@@ -1,18 +1,35 @@
 import React, {useState, useEffect} from 'react';
 import { useSelector } from 'react-redux';
     import LoadingScreen from '../../IndexPage/LoadingScreen';
+import CheckBox from './CheckBox';
+import InfoBox from './InfoBox';
 import Slider from './Slider';
 
     const ConfigPubSub = () => {
 
     let client = useSelector((state) => state.settings.clientid);
-    console.log("the client ", client)
     const [numPub, setNumPub] = useState(null);
     const [numSub, setNumSub] = useState(null);
     const [pubInterval, setPubInterval] = useState(null);
     const [pubTopicLevel, setPubTopicLevel] = useState(null);
     const [subTopicLevel, setSubTopicLevel] = useState(null);
+    const [randnum, setRandNum] = useState(0);
 
+    const [compression, setCompression] = useState(false);
+    const [encryption, setEncryption] = useState(false);
+    const [persistence, setPersistence] = useState(false);
+
+
+
+    useEffect(() => {
+        setInterval(() => {
+            setRandNum(Math.floor(Math.random()*100));
+        }, 1000);
+      
+      return () => {
+      }
+    }, [])
+    
   return (
     <>
     {client ? <LoadingScreen /> :
@@ -28,10 +45,14 @@ import Slider from './Slider';
                     <div class="card-text">
                         <form>
                             <div class="form-group row">
+                            <div className="my-3">
                             <Slider stateVar={numPub} setStateVar={setNumPub} labelVar={"No. of Publisher"}/>
                             <Slider stateVar={pubInterval} setStateVar={setPubInterval} labelVar={"Interval"}/>
-
                             <Slider stateVar={pubTopicLevel} setStateVar={setPubTopicLevel} labelVar={"Topic Level"}/>
+                            </div>
+
+                            <InfoBox tagId={"cpu"} label={"CPU"} value={randnum}/>
+                            <InfoBox tagId={"cpu"} label={"CPU"} value={randnum}/>
 
                             </div>
                     </form>
@@ -48,17 +69,31 @@ import Slider from './Slider';
                     <h5 class="card-title text-center">Broker</h5>
                     <div class="card-text">
                     <form>
-                            <div class="form-group row">
-
-                    
-                            <div className='col-md-2 ms-2'>
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                            <label class="form-check-label" for="flexCheckDefault">
-                                Dynamic
-                            </label>
+                    <div class="form-group row">
+                            <div className="my-3">
+                                <CheckBox stateVar={compression} setStateVar={setCompression} labelVar={"Compression"}/>
+                            
                             </div>
 
+                            <div className="row col-md-10">
+                                <div className="col">
+                                <InfoBox tagId={"cpu"} label={"Received"} value={randnum} labellen={6} boxlen={5}/>
+                                </div>
+                                <div className="col">
+                                <InfoBox tagId={"cpu"} label={"Sent"} value={randnum} labellen={6} boxlen={5}/>
+                                </div>
                             </div>
+                            <InfoBox tagId={"cpu"} label={"CPU"} value={randnum}/>
+                            <InfoBox tagId={"cpu"} label={"Memory"} value={randnum}/>
+                            <div className="row">
+                                <div className="col">
+                                <InfoBox tagId={"cpu"} label={"Network IN"} value={randnum} labellen={6} boxlen={5}/>
+                                </div>
+                                <div className="col">
+                                <InfoBox tagId={"cpu"} label={"Network OUT"} value={randnum} labellen={6} boxlen={5}/>
+                                </div>
+                            </div>
+                    </div>
 
                     </form>
 
@@ -75,10 +110,13 @@ import Slider from './Slider';
                     <div class="card-text">
                     <form>
                             <div class="form-group row">
+                            <div className="my-3">
                             <Slider stateVar={numSub} setStateVar={setNumSub} labelVar={"No. of Publisher"} />
                             <Slider stateVar={subTopicLevel} setStateVar={setSubTopicLevel} labelVar={"Topic Levels"} />
+                            </div>
 
-
+                            <InfoBox tagId={"cpu"} label={"CPU"} value={randnum}/>
+                            <InfoBox tagId={"cpu"} label={"CPU"} value={randnum}/>
                             </div>
                     </form>
 
@@ -89,7 +127,7 @@ import Slider from './Slider';
             </div>
             <div className='row'>
                 <div className=''>
-                <button type="button" class="btn btn-primary btn-lg">Start Dashboard</button>
+                <button type="button" class="btn btn-primary">Start Dashboard</button>
                 </div>
 
             </div>
