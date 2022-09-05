@@ -46,9 +46,9 @@ import Slider from './Slider';
                         <form>
                             <div class="form-group row">
                             <div className="my-3">
-                            <Slider stateVar={numPub} setStateVar={setNumPub} labelVar={"No. of Publisher"}/>
-                            <Slider stateVar={pubInterval} setStateVar={setPubInterval} labelVar={"Interval"}/>
-                            <Slider stateVar={pubTopicLevel} setStateVar={setPubTopicLevel} labelVar={"Topic Level"}/>
+                            <Slider id={"numpub"} stateVar={numPub} setStateVar={setNumPub} labelVar={"No. of Publisher"}/>
+                            <Slider id={"pubinterval"} stateVar={pubInterval} setStateVar={setPubInterval} labelVar={"Interval"}/>
+                            <Slider id={"pubtopiclevel"} stateVar={pubTopicLevel} setStateVar={setPubTopicLevel} labelVar={"Topic Level"}/>
                             </div>
 
                             <InfoBox tagId={"cpu"} label={"CPU"} value={randnum}/>
@@ -121,8 +121,8 @@ import Slider from './Slider';
                     <form>
                             <div class="form-group row">
                             <div className="my-3">
-                            <Slider stateVar={numSub} setStateVar={setNumSub} labelVar={"No. of Publisher"} />
-                            <Slider stateVar={subTopicLevel} setStateVar={setSubTopicLevel} labelVar={"Topic Levels"} />
+                            <Slider id={"numsub"} stateVar={numSub} setStateVar={setNumSub} labelVar={"No. of Publisher"} />
+                            <Slider id={"subtopiclevel"} stateVar={subTopicLevel} setStateVar={setSubTopicLevel} labelVar={"Topic Levels"} />
                             </div>
 
                             <InfoBox tagId={"cpu"} label={"CPU"} value={randnum}/>
