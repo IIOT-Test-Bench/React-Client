@@ -1,13 +1,134 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import LoadingScreen from '../../IndexPage/LoadingScreen';
+import mqtt from 'mqtt/dist/mqtt';
+
 
 const PubAndSubscribe = () => {
-    let client = true;
+    
+    //Later would be added to redux store
+  const [currentClient, setCurrentClient] = useState("");
+    //Subscriber topic and topic level 
+    const [subTopic, setSubTopic] = useState("");
+    const [subTopicLevel, setSubTopicLevel] = useState("");
+
+    //Connect a subscriber client 
+    const [client, setClient] = useState(null);
+    const [connectStatus, setConnectStatus] = useState(null);
+    const [payload, setPayload] = useState(null);
+    const [isSub, setIsSub] = useState(null);
+    
+    const mqttConnect = async (host, mqttOption) => {
+    setConnectStatus('Connecting');
+    setClient(await mqtt.connect(host, mqttOption));
+    return true;
+    };
+
+useEffect(() => {
+  if (client) {
+    console.log(client)
+    client.on('connect', () => {
+      setConnectStatus('Connected');
+    });
+    client.on('error', (err) => {
+      console.error('Connection error: ', err);
+      client.end();
+    });
+    client.on('reconnect', () => {
+      setConnectStatus('Reconnecting');
+    });
+    client.on('message', (topic, message) => {
+      const payload = { topic, message: message.toString() };
+      setPayload(payload);
+      console.log(payload);
+    });
+  }
+}, [client]);
+
+  //store random client id from the generator function 
+  const [randId, setRandId] = useState("");
+
+  //Store the various states for the main connection to broker
+  const [connStatus, setConnStatus] = useState(false);
+  const [connStatusText, setConnStatusText] = useState("Connect");
+  const [statusCode, setStatusCode] = useState("info");
+  const [connState, setconnState] = useState("Disconnected");
+
+  //connect the client function
+  useEffect(() => {
+    switch(connStatus){
+      case false:
+        setConnStatusText("Connect");
+        setStatusCode("info");
+        setconnState("Disconnected");
+        break;
+        case true:
+          setConnStatusText("Disconnect");
+          setStatusCode("success");
+          setconnState("Connected");
+          break;
+      default:
+  
+      }
+    return () => {
+    }
+  }, [])
+
+  const waitSmall = () => {
+    setTimeout(() => {
+        console.log("waiting")
+    }, 5000);
+  }
+
+
+  const handleConnect = async () => {
+    try{
+      setconnState("Loading...");
+      
+      if(connStatus && (connState === "Connected")){
+        let feedback = await waitSmall(); 
+        console.log(feedback);
+        if(feedback.statusText === "OK"){
+          setConnStatus(false);
+          setconnState("Disconnected");
+        }        
+      }else{
+        let feedback = await waitSmall();
+        if(feedback){
+          setConnStatus(true);
+          setconnState("Connected");
+          setCurrentClient(randId);
+        }
+      }
+
+    }catch(e){
+
+    }
+    
+  }
+  
+
 
   return (
     <>
-    {client ? <LoadingScreen /> :
+    {currentClient ? <LoadingScreen /> :
     <div>
+
+<div className='row my-5'>
+        <h2 className='col'>Configure Connection : <span id="connState" style={{color: "orange", fontSize: "0.7em"}}>{connState}</span> 
+        { connState === "Connected" ?
+        <div className="spinner-grow mx-3" style={{width: "1.8rem", height: "1.8rem", color: "orange"}} role="status">
+         <span className="visually-hidden">Loading...</span> 
+        </div>
+        : ""}
+        </h2>
+        
+        <button type="button" id="connStatus" className={`btn btn-${statusCode} col-md-3 col-lg-2`} onClick={handleConnect}>
+        {connState === "Loading..."? <span className="spinner-border spinner-border-sm mx-3" role="status" aria-hidden="true"></span> : ""}
+        {connStatusText}
+        </button>
+        </div>
+
+
         <div className="row">
             <div className="col-sm-6">
                 <div className="card">
@@ -71,14 +192,14 @@ const PubAndSubscribe = () => {
                                     <div className="col-md-8" >
                                     <label htmlFor="topic" className="col col-form-label">Topic</label>
                                     <div className="col">
-                                    <input type="text" className="form-control" id="topic" placeholder="Enter the topic" />
+                                    <input type="text" className="form-control" id="topic" placeholder="Enter the topic" onChange={(e) => setSubTopic(e.target.value)}/>
                                     </div>
                                     </div>
 
                                     <div className="col-md-4" >
                                     <label htmlFor="TopicLevel" className="col col-form-label">Topic Level</label>
                                     <div className="col">
-                                    <   select className="form-select" aria-label="Select protocol">
+                                    <   select className="form-select" aria-label="Select protocol" onChange={(e) => {setSubTopicLevel(e.target.value); console.log(subTopicLevel)}}>
                                         <option selected value="0">0</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
@@ -89,7 +210,7 @@ const PubAndSubscribe = () => {
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" className="btn btn-primary">Subscribe</button>
+                                <button type="button" className="btn btn-primary" onClick={""}>Subscribe</button>
                             </div>
                             </div>
                         </div>
@@ -109,7 +230,7 @@ const PubAndSubscribe = () => {
                         <div className="card">
                         <div className="card-body">
                             <h6 className="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                            <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            {payload?.map((elem, index) => <p className="card-text" key={index}>{elem}</p>)}
                         </div>
                         </div>
                     </div>

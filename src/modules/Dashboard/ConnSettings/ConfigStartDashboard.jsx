@@ -5,7 +5,7 @@ import CheckBox from './CheckBox';
 import InfoBox from './InfoBox';
 import Slider from './Slider';
 
-    const ConfigPubSub = () => {
+    const ConfigStartDashboard = () => {
 
     let client = useSelector((state) => state.settings.clientid);
     const [numPub, setNumPub] = useState(null);
@@ -38,13 +38,13 @@ import Slider from './Slider';
         <div className="row">
 
             {/* Publisher configurations */}
-        <div class="col-sm-6 col-md-3 my-3">
-                <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Publisher</h5>
-                    <div class="card-text">
+        <div className="col-sm-6 col-md-3 my-3">
+                <div className="card">
+                <div className="card-body">
+                    <h5 className="card-title">Publisher</h5>
+                    <div className="card-text">
                         <form>
-                            <div class="form-group row">
+                            <div className="form-group row">
                             <div className="my-3">
                             <Slider id={"numpub"} stateVar={numPub} setStateVar={setNumPub} labelVar={"No. of Publisher"}/>
                             <Slider id={"pubinterval"} stateVar={pubInterval} setStateVar={setPubInterval} labelVar={"Interval"}/>
@@ -63,13 +63,13 @@ import Slider from './Slider';
             </div>
 
             {/* Broker info  */}
-            <div class="col-sm-6 col-md-6 my-3">
-                <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title text-center">Broker</h5>
-                    <div class="card-text">
+            <div className="col-sm-6 col-md-6 my-3">
+                <div className="card">
+                <div className="card-body">
+                    <h5 className="card-title text-center">Broker</h5>
+                    <div className="card-text">
                     <form>
-                    <div class="form-group row">
+                    <div className="form-group row">
                             <div className="my-3">
                                 <CheckBox stateVar={compression} setStateVar={setCompression} labelVar={"Compression"}/>
                                 <CheckBox stateVar={encryption} setStateVar={setEncryption} labelVar={"Encryption"}/>
@@ -77,9 +77,9 @@ import Slider from './Slider';
                             
                             </div>
                             <div className="my-3">
-                            <div class="spinner-border" style={{width: "6rem", height: "6rem"}} role="status">
-                            <div class="spinner-grow" style={{width: "3rem", height: "3rem"}} role="status">
-                            <span class="visually-hidden">Loading...</span>
+                            <div className="spinner-border" style={{width: "6rem", height: "6rem"}} role="status">
+                            <div className="spinner-grow" style={{width: "3rem", height: "3rem"}} role="status">
+                            <span className="visually-hidden">Loading...</span>
                             </div>
                             </div>
                             
@@ -113,13 +113,13 @@ import Slider from './Slider';
             </div>
 
             {/* Subscriber configurations */}
-            <div class="col-sm-6 col-md-3 my-3">
-                <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Subscriber</h5>
-                    <div class="card-text">
+            <div className="col-sm-6 col-md-3 my-3">
+                <div className="card">
+                <div className="card-body">
+                    <h5 className="card-title">Subscriber</h5>
+                    <div className="card-text">
                     <form>
-                            <div class="form-group row">
+                            <div className="form-group row">
                             <div className="my-3">
                             <Slider id={"numsub"} stateVar={numSub} setStateVar={setNumSub} labelVar={"No. of Publisher"} />
                             <Slider id={"subtopiclevel"} stateVar={subTopicLevel} setStateVar={setSubTopicLevel} labelVar={"Topic Levels"} />
@@ -137,7 +137,7 @@ import Slider from './Slider';
             </div>
             <div className='row'>
                 <div className=''>
-                <button type="button" class="btn btn-primary">Start Dashboard</button>
+                <button type="button" className="btn btn-primary">Start Dashboard</button>
                 </div>
 
             </div>
@@ -147,4 +147,4 @@ import Slider from './Slider';
   )
 }
 
-export default ConfigPubSub
+export default ConfigStartDashboard

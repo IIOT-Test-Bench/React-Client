@@ -11,9 +11,9 @@ const CheckBox = ({stateVar, setStateVar, labelVar}) => {
     }
   return (
     <>
-        <div class="form-check">
-            <input class="form-check-input" type="checkbox" value={stateVar} id="flexCheckDefault" onChange={(e) => handleChange(e)}/>
-            <label class="form-check-label" for="flexCheckDefault">
+        <div className="form-check">
+            <input className="form-check-input" type="checkbox" value={stateVar} id="flexCheckDefault" onChange={(e) => handleChange(e)}/>
+            <label className="form-check-label" htmlFor="flexCheckDefault">
                 {labelVar}
             </label>
         </div>
