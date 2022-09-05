@@ -1,32 +1,89 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import mqtt from 'mqtt/dist/mqtt';
 
-    let client = "user";
-    let isSubscribed = false;
-    let connectStatus = "disconnected";
+    let clientObj = null;
 
-    const host = "broker.emqx.io";
-    const port = "1883";
     const clientId = `mqtt_${Math.random().toString(16).slice(3)}`;
-    const connectUrl = `mqtt://${host}:${port}`;
+    const connectUrl = `ws://broker.emqx.io:8083/mqtt`;
     const options = {
-    clientId,
-    clean: true,
-    connectTimeout: 4000,
-    username: "emqx",
-    password: "public",
-    reconnectPeriod: 1000,
-    };
+      keepalive: 60,
+      clientId: clientId,
+      protocolId: 'MQTT',
+      protocolVersion: 4,
+      clean: true,
+      reconnectPeriod: 1000,
+      connectTimeout: 30 * 1000,
+      will: {
+        topic: 'WillMsg',
+        payload: 'Connection Closed abnormally..!',
+        qos: 0,
+        retain: false
+      },
+    }
 
-
-
-const connectSubscriber = createAsyncThunk("", async () => {
-    const client = await mqtt.connect(connectUrl, options);
-    client.on("connect", () => {
-        console.log({clientId:client.options.clientid, status: "connected", msg: "Successfully Connected"});
-        // console.log(clientobject);
+    try{
+      clientObj = mqtt.connect(connectUrl, options);
+      console.log("Yello", clientObj);
+      clientObj.on("connect", () => {
+        console.log({clientId:clientObj.options.clientId, status: "connected", msg: "Successfully Connected"});
       });
+    }catch(e){
+    }
 
+const connectSubscriber = createAsyncThunk("subscriber/connectSubscriber", async () => {
+    try{
+      clientObj = await mqtt.connect(connectUrl, options);
+      console.log("Yello", clientObj);
+      clientObj.on("connect", () => {
+        console.log({clientId:clientObj.options.clientid, status: "connected", msg: "Successfully Connected"});
+      });
+    }catch(e){
+    }
+});
+
+///Disconnect a subscriber client
+const disconnectSubscriber = createAsyncThunk("subscriber/disconnectSubscriber", async () => {
+  try{
+      if (clientObj) {
+      clientObj.end();
+      clientObj = null;
+    }
+  }catch(e){  }
+});
+
+//Subscribe to a topic
+const subscribeToTopic = createAsyncThunk("subscriber/subscribeToTopic", async (subscription) => {
+  try{
+    const { topic, qos=2 } = subscription;
+    if (clientObj) {
+      clientObj.subscribe(topic, { qos }, (error) => {
+        if (error) {
+          console.log('Subscribe to topics error', error)
+          return
+        }
+      });
+      clientObj.on('message', (topic, message) => {
+        const payload = { topic, message: message.toString() };
+        console.log(payload);
+      });
+    }
+  }catch(e){  }
+});
+
+//Unsubscribe from a topic
+const unsubscribeFromTopic = createAsyncThunk("subscriber/unsubscribeFromTopic", async (subscription) => {
+  try{
+    if (clientObj) {
+      const { topic } = subscription;
+      clientObj.unsubscribe(topic, error => {
+        if (error) {
+          console.log('Unsubscribe error', error)
+          return
+        }
+      });
+    }
+    
+  }catch(e){  }
 });
 
 const subscriber = createSlice({
@@ -35,6 +92,8 @@ const subscriber = createSlice({
         client: null,
         messages: [],
         numberlimit: 40,
+        connectStatus: "disconnected",
+        topics: []
     },
     reducers: {
         subscribedMessage  (state, action) {
@@ -46,52 +105,33 @@ const subscriber = createSlice({
             state.numberlimit = numberlimit;
         }
     },
-    extraReducers: (builder) => {
-        builder.addCase(connectSubscriber, state => {
-
-        })
+    extraReducers:  {
+        [connectSubscriber.pending.type]: (state, action) => {
+          state.connectStatus = "Loading...";
+          console.log("Loading")
+        },
+        [connectSubscriber.fulfilled.type]: (state, action) => {
+          state.connectStatus = "connected"
+          console.log("Connected", clientObj)
+        },
+        [connectSubscriber.rejected.type]: (state, action) => {
+          console.log("Error");
+        },
+        [disconnectSubscriber.pending.type]: (state, action) => {
+          console.log("Disconnecting")
+        },
+        [disconnectSubscriber.fulfilled.type]: (state, action) => {
+          console.log("Disconnected")
+        },
+        [disconnectSubscriber.rejected.type]: (state, action) => {
+          console.log("Disconnection Error");
+        },
     }
-});
+});   
 
-//Subscribe to a topic
-const mqttSub = (subscription) => {
-    if (client) {
-      const { topic, qos=2 } = subscription;
-      client.subscribe(topic, { qos }, (error) => {
-        if (error) {
-          console.log('Subscribe to topics error', error)
-          return
-        }
-        isSubscribed = true;
-      });
-    }
-  };
-
-  //Unsubscribe from a topic
-  const mqttUnSub = (subscription) => {
-    if (client) {
-      const { topic } = subscription;
-      client.unsubscribe(topic, error => {
-        if (error) {
-          console.log('Unsubscribe error', error)
-          return
-        }
-        isSubscribed = false;
-      });
-    }
-  };
-
-  //Disconnect a subscriber client
-  const mqttDisconnect = () => {
-    if (client) {
-      client.end(() => {
-        connectStatus = 'Connect';
-      });
-    }
-  }
-
-
-
- export const {addMessage, setNumberLimit} = subscriber.actions;
+ export const subscriberActions = { 
+  ...subscriber.actions, 
+  connectSubscriber
+}
 
 export default subscriber;
