@@ -9,6 +9,4 @@ export const generateTopic = (topicLen, topicLvl) => {
     return initialStr;
 }
 
-console.log(generateTopic(4, 3));
-
 export default generateTopic;
