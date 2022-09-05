@@ -1,5 +1,5 @@
 //Function to generate random client Id for users that would select option
-const generateID = (lim) => {
+export const generateID = (lim) => {
     let strArr = [];
     //using a sample string 
     //String.fromCharCode()

@@ -72,6 +72,16 @@ import Slider from './Slider';
                     <div class="form-group row">
                             <div className="my-3">
                                 <CheckBox stateVar={compression} setStateVar={setCompression} labelVar={"Compression"}/>
+                                <CheckBox stateVar={encryption} setStateVar={setEncryption} labelVar={"Encryption"}/>
+                                <CheckBox stateVar={persistence} setStateVar={setPersistence} labelVar={"Persistence"}/>
+                            
+                            </div>
+                            <div className="my-3">
+                            <div class="spinner-border" style={{width: "6rem", height: "6rem"}} role="status">
+                            <div class="spinner-grow" style={{width: "3rem", height: "3rem"}} role="status">
+                            <span class="visually-hidden">Loading...</span>
+                            </div>
+                            </div>
                             
                             </div>
 

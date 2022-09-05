@@ -3,6 +3,7 @@ import generateID from '../../HelperFunctions/generateClientId';
 import { connectBroker, disconnectBroker } from '../../Settings/Store/SettingsCrud';
 import { useDispatch, useSelector } from 'react-redux';
 import {setClientId} from '../../Settings/Store/SettingsSlice';
+import generateTopic from '../../HelperFunctions/generateTopic';
 
 const ConfigBroker = () => {
   const dispatch = useDispatch();
@@ -70,10 +71,6 @@ const ConfigBroker = () => {
           dispatch(setClientId(currentClient));
 
         }
-
-
-
-
       }
 
     }catch(e){
@@ -89,6 +86,7 @@ const ConfigBroker = () => {
     if(target.checked){
       getID = true;
       const randomId = generateID(6);
+      console.log(generateTopic(4,3));
       setRandId(randomId);
       getID = false;
       clientIdField.value = randomId;

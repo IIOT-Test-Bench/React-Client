@@ -21,7 +21,7 @@ const PubAndSubscribe = () => {
                                     <input type="text" className="form-control" id="topic" placeholder="Enter the topic" />
                                     </div>
                                     </div>
-                                    {/* <div className="col-md-4" >
+                                    <div className="col-md-4" >
                                     <label htmlFor="TopicLevel" className="col col-form-label">Topic Level</label>
                                     <div className="col">
                                         <select className="form-select" aria-label="Select protocol">
@@ -30,7 +30,7 @@ const PubAndSubscribe = () => {
                                         <option value="2">2</option>
                                         </select>
                                     </div>
-                                    </div> */}
+                                    </div>
                                     </div>
 
                                     <div className="form-group row">
@@ -75,7 +75,7 @@ const PubAndSubscribe = () => {
                                     </div>
                                     </div>
 
-                                    {/* <div className="col-md-4" >
+                                    <div className="col-md-4" >
                                     <label htmlFor="TopicLevel" className="col col-form-label">Topic Level</label>
                                     <div className="col">
                                     <   select className="form-select" aria-label="Select protocol">
@@ -84,7 +84,7 @@ const PubAndSubscribe = () => {
                                         <option value="2">2</option>
                                         </select>
                                     </div>
-                                    </div> */}
+                                    </div>
                                 </div>
                             </div>
                             <div className="modal-footer">
