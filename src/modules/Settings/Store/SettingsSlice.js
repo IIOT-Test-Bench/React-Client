@@ -12,33 +12,15 @@ const settings = createSlice({
         clientid: ""
     },
     reducers: {
-        setHost(state, action) {
-            const {host} = action.payload;
-            state.host = host;
-        },
-        setPort(state, action) {
-            const {port} = action.payload;
-            state.port = port;
-        },
-        setConnTimeout(state, action) {
-            const {timeout} = action.payload;
-            state.port = timeout;
-        },
-        setProtocol(state, action) {
-            const {protocol} = action.payload;
-            state.protocol = protocol;
-        },
-        setUsername(state, action) {
-            const {username} = action.payload;
-            state.username = username;
-        },
-        setPassword(state, action) {
-            const {password} = action.payload;
-            state.password = password;
-        },
-        setClientId(state, action) {
-            const {clientid} = action.payload;
+        setCurrentClient(state, action) {
+            const {host, port, clientid, timeout, protocol, username, password} = action.payload;
             state.clientid = clientid;
+            state.host = host;
+            state.port = port;
+            state.timeout = timeout;
+            state.protocol = protocol;
+            state.username = username;
+            state.password = password;
         }
     },
     extraReducers: {
@@ -46,6 +28,6 @@ const settings = createSlice({
     }
 });
 
- export const {setClientId} = settings.actions;
+ export const { setCurrentClient} = settings.actions;
 
 export default settings;

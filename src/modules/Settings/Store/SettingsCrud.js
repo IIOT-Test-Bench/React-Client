@@ -1,6 +1,6 @@
 import axios from "axios"
 
-
+//Connect to a broker through node server api
 export const connectBroker = async (host, port, clientId, timeout, username, password) => {
 
     try{
@@ -19,14 +19,14 @@ export const connectBroker = async (host, port, clientId, timeout, username, pas
     }
 }
 
-export const publishmsg = async ( clientId, topic, message ) => {
+//Publish a message to broker through node server
+export const publishMsg = async ( clientId, topic, message ) => {
     try{
         
         const result = await axios.post("http://localhost:3001/publish", {
             clientId,
             topic,
-            message,
-            
+            message,   
         })
         return result;
 
@@ -36,6 +36,23 @@ export const publishmsg = async ( clientId, topic, message ) => {
 
 }
 
+//Publish a message to broker through node server
+export const subscribeTopic = async ( clientId, topic ) => {
+    try{
+        
+        const result = await axios.post("http://localhost:3001/subscribe", {
+            clientId, 
+            topic
+        })
+        return result;
+
+    }catch(err){
+        console.log(err)
+    }
+
+}
+
+//Disconnect currently connected client
 export const disconnectBroker = async (clientId) => {
 
     try{

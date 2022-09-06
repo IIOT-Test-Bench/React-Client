@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import generateID from '../../HelperFunctions/generateClientId';
 import { connectBroker, disconnectBroker } from '../../Settings/Store/SettingsCrud';
 import { useDispatch, useSelector } from 'react-redux';
-import {setClientId} from '../../Settings/Store/SettingsSlice';
+import { setCurrentClient} from '../../Settings/Store/SettingsSlice';
 // import generateTopic from '../../HelperFunctions/generateTopic';
 // import { generateMessage } from '../../HelperFunctions/generateMessage';
 
@@ -10,8 +10,7 @@ const ConfigBroker = () => {
   const dispatch = useDispatch();
   //Store the current client
   //Later would be added to redux store
-  const [currentClient, setCurrentClient] = useState("");
-
+  let connectedClient = useSelector(state => state.settings.clientid);
   //store random client id from the generator function 
   const [randId, setRandId] = useState("");
 
@@ -48,7 +47,7 @@ const ConfigBroker = () => {
     return () => {
     }
   }, [connStatus])
-  
+
 
   //Connect to the broker on click or submission
   const handleConnect = async () => {
@@ -56,28 +55,23 @@ const ConfigBroker = () => {
       setconnState("Loading...");
       
       if(connStatus && (connState === "Connected")){
-        let feedback = await disconnectBroker(currentClient); 
-        console.log(feedback);
+        let feedback = await disconnectBroker(connectedClient); 
         if(feedback.statusText === "OK"){
           setConnStatus(false);
           setconnState("Disconnected");
         }        
       }else{
         let feedback = await connectBroker(host, port, randId, timeout, username, password);
-        console.log(feedback);
         if(feedback.statusText === "OK"){
           setConnStatus(true);
           setconnState("Connected");
           setCurrentClient(randId);
-          dispatch(setClientId(currentClient));
-
+          dispatch(setCurrentClient({host:host, port:port, clientid:randId, timeout:timeout, username:username, password:password}));
+          
         }
       }
-
     }catch(e){
-
-    }
-    
+      }
   }
 
   let getID = true;
