@@ -7,6 +7,11 @@ import { setCurrentClient, setConnState, setConnStatus, setConnStatusText, setSt
 // import { generateMessage } from '../../HelperFunctions/generateMessage';
 
 const ConfigBroker = () => {
+
+  //Set a prevent typing states for no input when connnected
+  const [preventTyping, setPreventTyping] = useState(false);
+
+
   const dispatch = useDispatch();
   //Store the current client
   //Later would be added to redux store
@@ -19,9 +24,6 @@ const ConfigBroker = () => {
   let connStatusText = useSelector(state => state.settings.connStatusText);
   let statusCode = useSelector(state => state.settings.statusCode);
   let connState = useSelector(state => state.settings.connState);
-  let test = useSelector(state => state.settings);
-  console.log(test)
-
 
   //Set form data states
   const [host, setHost] = useState("");
@@ -63,6 +65,7 @@ const ConfigBroker = () => {
           dispatch(setConnStatus({connStatus:false}));
           dispatch(setConnState({connState:"Disconnected"}));
           dispatch(resetConnection());
+          setPreventTyping(false);
         }        
       }else{
         let feedback = await connectBroker(host, port, randId, timeout, username, password);
@@ -70,7 +73,7 @@ const ConfigBroker = () => {
           dispatch(setConnStatus({connStatus:true}));
           dispatch(setConnState({connState:"Connected"}));
           dispatch(setCurrentClient({host:host, port:port, clientid:randId, timeout:timeout, username:username, password:password}));
-          
+          setPreventTyping(true);
         }
       }
     }catch(e){
@@ -118,21 +121,21 @@ const ConfigBroker = () => {
                 <div className="col-md-6" >
                 <label htmlFor="host" className="col col-form-label">Host or IP</label>
                 <div className="col">
-                <input type="text" className="form-control" id="host" placeholder="Host or IP Address" onChange={(e) => {setHost(e.target.value)}}/>
+                <input type="text" className="form-control" id="host" placeholder="Host or IP Address" onChange={(e) => {setHost(e.target.value)}} disabled={preventTyping}/>
                 </div>
                 </div>
 
                 <div className="col-md-4" >
                 <label htmlFor="port" className="col col-form-label">Port</label>
                 <div className="col">
-                <input type="number" className="form-control" id="port" defaultValue={"1883"} onChange={(e) => {setPort(e.target.value)}}/>
+                <input type="number" className="form-control" id="port" defaultValue={"1883"} onChange={(e) => {setPort(e.target.value)}} disabled={preventTyping}/>
                 </div>
                 </div>
 
                 <div className="col-md-2" >
                 <label htmlFor="timeout" className="col col-form-label">Timeout</label>
                 <div className="col">
-                <input type="number" className="form-control" id="timeout" defaultValue={"4000"} onChange={(e) => {setTimeout(e.target.value)}}/>
+                <input type="number" className="form-control" id="timeout" defaultValue={"4000"} onChange={(e) => {setTimeout(e.target.value)}} disabled={preventTyping}/>
                 </div>
                 </div>
             </div>
@@ -141,7 +144,7 @@ const ConfigBroker = () => {
                 <div className="col-md-6" >
                 <label htmlFor="protocol" className="col col-form-label">Protocol</label>
                 <div className="col">
-                  <select className="form-select" defaultValue={"TCP"} aria-label="Select protocol">
+                  <select className="form-select" defaultValue={"TCP"} aria-label="Select protocol" disabled={preventTyping}>
                   <option value="tcp">TCP</option>
                   <option value="ssl">SSL</option>
                   </select>
@@ -153,13 +156,13 @@ const ConfigBroker = () => {
                 <div className="col-md-6" >
                 <label htmlFor="username" className="col col-form-label">Username</label>
                 <div className="col">
-                <input type="text" className="form-control" id="username" placeholder="Enter Username: emqx" onChange={(e) => {setUsername(e.target.value)}}/>
+                <input type="text" className="form-control" id="username" placeholder="Enter Username: emqx" autoComplete={"password"} onChange={(e) => {setUsername(e.target.value)}} disabled={preventTyping}/>
                 </div>
                 </div>
                 <div className="col-md-6" >
                 <label htmlFor="password" className="col col-form-label">Password</label>
                 <div className="col">
-                <input type="text" className="form-control" id="password" placeholder="Enter Password: public" onChange={(e) => {setPassword(e.target.value)}}/>
+                <input type="password" className="form-control" id="password" autoComplete={"current-password"} onChange={(e) => {setPassword(e.target.value)}} disabled={preventTyping}/>
                 </div>
                 </div>
             </div>
@@ -168,14 +171,14 @@ const ConfigBroker = () => {
                 <div className="col-md-8" >
                 <label htmlFor="clientid" className="col col-form-label">Client Id</label>
                 <div className="col">
-                <input type="text" className="form-control" id="clientid" placeholder='Enter Client ID' defaultValue={getID? randId : ""} onChange={(e) => {setRandId(e.target.value)}} />
+                <input type="text" className="form-control" id="clientid" placeholder='Enter Client ID' defaultValue={getID? randId : ""} onChange={(e) => {setRandId(e.target.value)}} disabled={preventTyping}/>
                 </div>
                 </div>
                 <div className="col-md-4" >
                 <label htmlFor="randomid" className="col col-form-label">Generate a client ID</label>
                 <div className="col">
                 <div className="form-check">
-                <input className="form-check-input" type="checkbox" value="" id="generateid" onClick={getClientId}/>
+                <input className="form-check-input" type="checkbox" value="" id="generateid" onClick={getClientId} disabled={preventTyping}/>
                 <label className="form-check-label" htmlFor="generateid">
                   Get an ID
                 </label>
