@@ -30,6 +30,7 @@ import Slider from './Slider';
       }
     }, [])
     
+    
   return (
     <>
     {client ? <LoadingScreen /> :

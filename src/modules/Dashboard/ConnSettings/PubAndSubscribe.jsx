@@ -1,31 +1,80 @@
 import React, {useState, useEffect} from 'react';
-import { useDispatch } from 'react-redux';
+// import { useDispatch, useSelector } from 'react-redux';
 import LoadingScreen from '../../IndexPage/LoadingScreen';
-import {subscriberActions} from '../../Settings/Store/SubscriberSlice';
+import mqtt from 'mqtt/dist/mqtt';
+
 
 const PubAndSubscribe = () => {
 
+    let cclient = "";
     //Dispatch action from subscriber slice
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     
-    //Later would be added to redux store
-    const [currentClient, setCurrentClient] = useState("");
+
     //Subscriber topic and topic level 
     const [subTopic, setSubTopic] = useState("");
+    const [subscribedTopic, setSubscribedTopic] = useState("aaaabb");
     const [subTopicLevel, setSubTopicLevel] = useState("");
+
+    //Publisher topic and topic level 
+    const [pubTopic, setPubTopic] = useState("");
+    const [pubTopicLevel, setPubTopicLevel] = useState("");
+    const [pubMsg, setPubMsg] = useState("");
 
     //Connect a subscriber client 
     const [client, setClient] = useState(null);
     const [connectStatus, setConnectStatus] = useState(null);
-    const [payload, setPayload] = useState(null);
+    const [payload, setPayload] = useState([]);
+
+    //Connect Button
+  //Store the various states for the main connection to broker
+  const [connStatus, setConnStatus] = useState(false);
+  const [connStatusText, setConnStatusText] = useState("Listen to messages");
+  const [statusCode, setStatusCode] = useState("info");
+  const [connState, setconnState] = useState("Disconnected");
+
+    const clientId = `listeningClient_${Math.random().toString(16).slice(3)}`;
+    const connectUrl = `ws://broker.emqx.io:8083/mqtt`;
+    const options = {
+      keepalive: 60,
+      clientId: clientId,
+      protocolId: 'MQTT',
+      protocolVersion: 4,
+      clean: true,
+      reconnectPeriod: 1000,
+      connectTimeout: 30 * 1000,
+      will: {
+        topic: 'WillMsg',
+        payload: 'Connection Closed abnormally..!',
+        qos: 0,
+        retain: false
+      },
+    }
+
     
-  
+    
+    //Connect to broker 
+    const mqttConnect = (host, mqttOption) => {
+      setConnectStatus('Loading...');
+      try{
+        let client = mqtt.connect(host, mqttOption);
+        setClient(client);
+        return client;
+      }catch(e){
+      }
+    };
 
 useEffect(() => {
+  const topic = "aaaabb";
   if (client) {
-    console.log(client)
     client.on('connect', () => {
       setConnectStatus('Connected');
+      setConnStatus(true);
+      setconnState("Connected");
+      setConnStatusText("Disconnect");
+      // client.subscribe([topic], () => {
+      //   console.log(`Subscribe to topic '${topic}'`);
+      // });
     });
     client.on('error', (err) => {
       console.error('Connection error: ', err);
@@ -34,64 +83,113 @@ useEffect(() => {
     client.on('reconnect', () => {
       setConnectStatus('Reconnecting');
     });
-    client.on('message', (topic, message) => {
-      const payload = { topic, message: message.toString() };
-      setPayload(payload);
-      console.log(payload);
+    client.on('message', (subscribedTopic, message) => {
+      console.log("Heard a msg");
+      let receivedMsg = new TextDecoder("utf-8").decode(message);
+      console.log(receivedMsg);
+      let msg = [subscribedTopic, receivedMsg ];
+      setPayload(prev => [...prev, msg]);
     });
   }
-}, [client]);
+}, [client, subscribedTopic]);
 
-  //Store the various states for the main connection to broker
-  const [connStatus, setConnStatus] = useState(false);
-  const [connStatusText, setConnStatusText] = useState("Listen to messages");
-  const [statusCode, setStatusCode] = useState("info");
-  const [connState, setconnState] = useState("Disconnected");
 
+  //Subscribe to a topic
+  const mqttSub = (subscription) => {
+    if (client) {
+      const { topic, qos } = subscription;
+      console.log(topic);
+       client.subscribe([topic], () => {
+        console.log(`Subscribe to topic '${topic}'`);
+      });
+    }
+  };
+
+  //Unsubscribe from a topic
+  const mqttUnSub = (subscription) => {
+    if (client) {
+      const { topic } = subscription;
+       client.unsubscribe(topic, error => {
+        if (error) {
+          console.log('Unsubscribe error', error)
+          return
+        }else{
+        console.log('Unsubscribed')
+        }
+      });
+    }
+  };
   
-  const waitSmall = () => {
-    setTimeout(() => {
-        console.log("waiting")
-    }, 5000);
+  //Publish a topic
+  const mqttPublish = (context) => {
+    if (client) {
+      const { topic = "aaaabb", qos = 2, payload = "Welcome to the testing"} = context;
+      client.publish(topic, payload, { qos }, error => {
+        if (error) {
+          console.log('Publish error: ', error);
+        }else{
+        console.log("Published");
+        }
+      });
+    }
   }
+  
+  //Disconnect from a client 
+  const mqttDisconnect = () => {
+    if (client) {
+       client.end(() => {
+        setConnectStatus('Connect');
+      });
+      return "Successfully Disconnected"
+    }
+  }
+  
 
-
+  //connect to broker to listen to mesages
   const handleConnect = async () => {
     try{
       setconnState("Loading...");
       
-      if(connStatus && (connState === "Connected")){
-        let feedback = dispatch(subscriberActions.connectSubscriber());
-        console.log(feedback);
-        if(feedback.statusText === "OK"){
+      if(client && (connState === "Connected")){
+        let disconnectClient = await mqttDisconnect();
+        if(disconnectClient){
           setConnStatus(false);
           setconnState("Disconnected");
+          setConnStatusText("Listen to messages")
         }        
       }else{
-        let feedback = dispatch(subscriberActions.connectSubscriber());
-        if(feedback){
-          setConnStatus(true);
-          setconnState("Connected");
-        }
+        let feedback = await mqttConnect(connectUrl, options);
+        console.log("Checking feedback", feedback);
       }
+    }catch(e){
+      }
+  }
+
+  //Subscribe to a topic
+  const handleSubscribe = async () => {
+    try{
+      await mqttSub({topic: "aaaabb"});
+      setSubscribedTopic("aaaabb");
+    }catch(e){
+
+    }
+  }
+
+  //Publish message
+  const handlePublish = async () => {
+    try{
+      await mqttPublish({topic: "aaaabb", qos:2, message: pubMsg});
+      console.log(payload);
 
     }catch(e){
 
     }
-    
   }
-  
-
-  const handleSubscribe = () => {
-    console.log("Subscribe to topic")
-  }
-
 
   return (
     <>
-    {currentClient ? <LoadingScreen /> :
+    {cclient ? <LoadingScreen /> :
     <div>
-
 <div className='row my-5'>
         <h2 className='col'><span id="connState" style={{color: "orange", fontSize: "0.7em"}}>{connState}</span> 
         { connState === "Connected" ?
@@ -118,13 +216,13 @@ useEffect(() => {
                                     <div className="col-md-8" >
                                     <label htmlFor="topic" className="col col-form-label">Topic</label>
                                     <div className="col">
-                                    <input type="text" className="form-control" id="topic" placeholder="Enter the topic" />
+                                    <input type="text" className="form-control" id="topic" placeholder="Enter the topic" onChange={(e) => setPubTopic(e.target.value)} />
                                     </div>
                                     </div>
                                     <div className="col-md-4" >
                                     <label htmlFor="TopicLevel" className="col col-form-label">Topic Level</label>
                                     <div className="col">
-                                        <select className="form-select" aria-label="Select protocol" defaultValue={0}>
+                                        <select className="form-select" aria-label="Select protocol" defaultValue={0} onChange={(e) => setPubTopicLevel(e.target.value)}>
                                         <option value="0">0</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
@@ -137,11 +235,11 @@ useEffect(() => {
                                     <div className="col" >
                                     <label htmlFor="message" className="col col-form-label">Message</label>
                                     <div className="col">
-                                    <textarea type="text" className="form-control" id="message" placeholder="Content of message"></textarea>
+                                    <textarea type="text" className="form-control" id="message" placeholder="Content of message" onChange={(e) => setPubMsg(e.target.value)}></textarea>
                                     </div>
                                     </div>
                                     </div>
-                                    <button type="button" className="btn btn-primary col col-2">Publish</button>
+                                    <button type="button" className="btn btn-primary col col-2" onClick={handlePublish}>Publish</button>
                     </div>
                 </div>
                 </div>
@@ -209,7 +307,7 @@ useEffect(() => {
                         <div className="card">
                         <div className="card-body">
                             <h6 className="card-subtitle mb-2 text-muted">Messages</h6>
-                            {payload?.map((elem, index) => <p className="card-text" key={index}>{elem}</p>)}
+                            {payload?.map((elem, index) => <p className="card-text" key={index}>{elem[1]}</p>)}
                         </div>
                         </div>
                     </div>

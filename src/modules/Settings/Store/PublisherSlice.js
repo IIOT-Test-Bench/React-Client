@@ -3,15 +3,18 @@ import { createSlice } from "@reduxjs/toolkit"
 const publisher = createSlice({
     name: "publisher",
     initialState: {
-        messages: [],
+        clientId: "",
+        publishedTopics: [],
         numberlimit: 40,
-        msginterval: 10
+        msginterval: 10,
+        topicLevel: 2
     },
     reducers: {
-        addMessage  (state, action) {
-            const {topic, message} = action.payload;
-            state.messages.push({topic: topic, message: message});
-        },
+        //Would be converted to a thunk to fetch topics from node server topics endpoint
+        // addPublishedTopics (state, action) {
+        //     const {topic, message} = action.payload;
+        //     state.publishedTopics.push({topic: topic, message: message});
+        // },
         setNumberLimit (state, action) {
             const {numberlimit} = action.payload;
             state.numberlimit = numberlimit;
@@ -19,10 +22,14 @@ const publisher = createSlice({
         setMsgInterval (state, action) {
             const {msginterval} = action.payload;
             state.msginterval = msginterval;
+        },
+        setTopicLevel (state, action) {
+            const {topicLevel} = action.payload;
+            state.topicLevel = topicLevel;
         }
     }
 });
 
- export const {addMessage, setNumberLimit, setMsgInterval} = publisher.actions;
+ export const { setNumberLimit, setMsgInterval, setTopicLevel} = publisher.actions;
 
 export default publisher;
