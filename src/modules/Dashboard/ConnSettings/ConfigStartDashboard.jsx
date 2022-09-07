@@ -1,6 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import { useSelector } from 'react-redux';
-    import LoadingScreen from '../../IndexPage/LoadingScreen';
+import generateID from '../../HelperFunctions/generateClientId';
+import LoadingScreen from '../../IndexPage/LoadingScreen';
+import { publishMsg } from '../../Settings/Store/SettingsCrud';
 import CheckBox from './CheckBox';
 import InfoBox from './InfoBox';
 import Slider from './Slider';
@@ -29,11 +31,27 @@ import Slider from './Slider';
       return () => {
       }
     }, [])
+
+    //Simulate a publishing sequence
+    useEffect(() => {
+        let interval = 3000;
+        let topic = "aaaabb";
+        
+      setInterval(() => {
+        let message = generateID(5);
+        publishMsg(client, topic, message);
+      }, interval);
+    
+      return () => {
+        
+      }
+    }, [client])
+    
     
     
   return (
     <>
-    {client ? <LoadingScreen /> :
+    {!client ? <LoadingScreen message={"Kindly connect to broker to run simulation"}/> :
     <div className=''>
         {/* <h2 className='my-4'></h2> */}
         <div className="row">

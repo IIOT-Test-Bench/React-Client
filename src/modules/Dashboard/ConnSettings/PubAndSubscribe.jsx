@@ -156,6 +156,7 @@ useEffect(() => {
           setConnStatus(false);
           setconnState("Disconnected");
           setConnStatusText("Listen to messages")
+          setPayload([]);
         }        
       }else{
         let feedback = await mqttConnect(connectUrl, options);
