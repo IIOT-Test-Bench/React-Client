@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import generateID from '../../HelperFunctions/generateClientId';
 import { connectBroker, disconnectBroker } from '../../Settings/Store/SettingsCrud';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCurrentClient} from '../../Settings/Store/SettingsSlice';
+import { setCurrentClient, setConnState, setConnStatus, setConnStatusText, setStatusCode, resetConnection} from '../../Settings/Store/SettingsSlice';
 // import generateTopic from '../../HelperFunctions/generateTopic';
 // import { generateMessage } from '../../HelperFunctions/generateMessage';
 
@@ -15,10 +15,13 @@ const ConfigBroker = () => {
   const [randId, setRandId] = useState("");
 
   //Store the various states for the main connection to broker
-  const [connStatus, setConnStatus] = useState(false);
-  const [connStatusText, setConnStatusText] = useState("Connect");
-  const [statusCode, setStatusCode] = useState("info");
-  const [connState, setconnState] = useState("Disconnected");
+  let connStatus = useSelector(state => state.settings.connStatus);
+  let connStatusText = useSelector(state => state.settings.connStatusText);
+  let statusCode = useSelector(state => state.settings.statusCode);
+  let connState = useSelector(state => state.settings.connState);
+  let test = useSelector(state => state.settings);
+  console.log(test)
+
 
   //Set form data states
   const [host, setHost] = useState("");
@@ -31,14 +34,14 @@ const ConfigBroker = () => {
   useEffect(() => {
     switch(connStatus){
       case false:
-        setConnStatusText("Connect");
-        setStatusCode("info");
-        setconnState("Disconnected");
+        dispatch(setConnStatusText({connStatusText:"Connect"}));
+        dispatch(setStatusCode({statusCode:"info"}));
+        dispatch(setConnState({connState:"Disconnected"}));
         break;
         case true:
-          setConnStatusText("Disconnect");
-          setStatusCode("success");
-          setconnState("Connected");
+          dispatch(setConnStatusText({connStatusText:"Disconnect"}));
+          dispatch(setStatusCode({statusCode:"success"}));
+          dispatch(setConnState({connState:"Connected"}));
 
           break;
       default:
@@ -46,26 +49,26 @@ const ConfigBroker = () => {
       }
     return () => {
     }
-  }, [connStatus])
+  }, [connStatus, dispatch])
 
 
   //Connect to the broker on click or submission
   const handleConnect = async () => {
     try{
-      setconnState("Loading...");
+      dispatch(setConnState({connState:"Loading..."}));
       
       if(connStatus && (connState === "Connected")){
         let feedback = await disconnectBroker(connectedClient); 
         if(feedback.statusText === "OK"){
-          setConnStatus(false);
-          setconnState("Disconnected");
+          dispatch(setConnStatus({connStatus:false}));
+          dispatch(setConnState({connState:"Disconnected"}));
+          dispatch(resetConnection());
         }        
       }else{
         let feedback = await connectBroker(host, port, randId, timeout, username, password);
         if(feedback.statusText === "OK"){
-          setConnStatus(true);
-          setconnState("Connected");
-          setCurrentClient(randId);
+          dispatch(setConnStatus({connStatus:true}));
+          dispatch(setConnState({connState:"Connected"}));
           dispatch(setCurrentClient({host:host, port:port, clientid:randId, timeout:timeout, username:username, password:password}));
           
         }
