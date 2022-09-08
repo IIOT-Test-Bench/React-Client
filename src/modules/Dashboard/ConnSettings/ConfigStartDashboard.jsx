@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import { useSelector } from 'react-redux';
 import generateID from '../../HelperFunctions/generateClientId';
+import generateTopic from '../../HelperFunctions/generateTopic';
 import LoadingScreen from '../../IndexPage/LoadingScreen';
-import { publishMsg } from '../../Settings/Store/SettingsCrud';
+import { publishMsg, subscribeTopic } from '../../Settings/Store/SettingsCrud';
 import CheckBox from './CheckBox';
 import InfoBox from './InfoBox';
 import Slider from './Slider';
@@ -10,18 +11,16 @@ import Slider from './Slider';
     const ConfigStartDashboard = () => {
 
     let client = useSelector((state) => state.settings.clientid);
-    const [numPub, setNumPub] = useState(null);
+    const [numPub, setNumPub] = useState("");
     const [numSub, setNumSub] = useState(null);
-    const [pubInterval, setPubInterval] = useState(null);
-    const [pubTopicLevel, setPubTopicLevel] = useState(null);
+    const [pubInterval, setPubInterval] = useState("");
+    const [pubTopicLevel, setPubTopicLevel] = useState("");
     const [subTopicLevel, setSubTopicLevel] = useState(null);
     const [randnum, setRandNum] = useState(0);
 
     const [compression, setCompression] = useState(false);
     const [encryption, setEncryption] = useState(false);
     const [persistence, setPersistence] = useState(false);
-
-
 
     useEffect(() => {
         setInterval(() => {
@@ -34,18 +33,61 @@ import Slider from './Slider';
 
     //Simulate a publishing sequence
     useEffect(() => {
-        let interval = 3000;
-        let topic = "aaaabb";
         
-      setInterval(() => {
-        let message = generateID(5);
-        publishMsg(client, topic, message);
-      }, interval);
-    
+        
+
       return () => {
         
+    
       }
     }, [client])
+
+    //Function to simulate the publishing process
+    const simulatePublishings = (interval=pubInterval, topicLen=4, topicLvl=pubTopicLevel, numOfPublishers=numPub) => {
+
+        let lim = 0;
+        
+        if(client){
+            let temp = setInterval(async () => {
+                lim += 1;
+                if(lim >= numOfPublishers){
+                    clearInterval(temp);
+                }
+    
+            //Generate a random topic for each published message
+            let topic = generateTopic(topicLen, topicLvl);
+
+            //Generate a random message for each publishing 
+            let message = generateID(5);
+            let currentpublished = await publishMsg(client, topic, message);
+            console.log(currentpublished);
+            console.log("The limit for publisher", lim);
+    
+            }, interval)
+        }
+    }
+
+    //Function for the simulation of the subscription of random topic from the already published topics
+    const simulateSubscriptions = () => {
+        let interval = 3000;
+        let topic = "aaaabb";
+        let lim = 0;
+        
+        if(client){
+            let temp = setInterval(async () => {
+                lim += 1;
+                if(lim >= 10){
+                    clearInterval(temp);
+                }
+    
+            let currentsubscribed = await subscribeTopic(client, topic);
+            console.log(currentsubscribed);
+
+            console.log("The limit for subscriptions", lim);
+    
+            }, interval)
+        }
+    }   
     
     
     
@@ -65,9 +107,9 @@ import Slider from './Slider';
                         <form>
                             <div className="form-group row">
                             <div className="my-3">
-                            <Slider id={"numpub"} stateVar={numPub} setStateVar={setNumPub} labelVar={"No. of Publisher"}/>
-                            <Slider id={"pubinterval"} stateVar={pubInterval} setStateVar={setPubInterval} labelVar={"Interval"}/>
-                            <Slider id={"pubtopiclevel"} stateVar={pubTopicLevel} setStateVar={setPubTopicLevel} labelVar={"Topic Level"}/>
+                            <Slider id={"numpub"} stateVar={numPub} setStateVar={setNumPub} labelVar={"No. of Publisher"} min={"1"} max={"100000"}/>
+                            <Slider id={"pubinterval"} stateVar={pubInterval} setStateVar={setPubInterval} labelVar={"Interval"} min={"1000"} max={"10000"} step={"1000"} />
+                            <Slider id={"pubtopiclevel"} stateVar={pubTopicLevel} setStateVar={setPubTopicLevel} labelVar={"Topic Level"} max={"5"}/>
                             </div>
 
                             <InfoBox tagId={"cpu"} label={"CPU"} value={randnum}/>
@@ -156,7 +198,7 @@ import Slider from './Slider';
             </div>
             <div className='row'>
                 <div className=''>
-                <button type="button" className="btn btn-primary">Start Dashboard</button>
+                <button type="button" className="btn btn-primary" onClick={simulatePublishings}>Start Dashboard</button>
                 </div>
 
             </div>

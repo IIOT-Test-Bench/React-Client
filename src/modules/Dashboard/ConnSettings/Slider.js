@@ -1,7 +1,7 @@
 import React from 'react'
 import { getRandomNumber } from '../../HelperFunctions/generateClientId'
 
-const Slider = ({id, stateVar, setStateVar, labelVar, min=0, max=50}) => {
+const Slider = ({id, stateVar, setStateVar, labelVar, min=0, max=50, step=1}) => {
   
   const handleCheck = ({target}) => {
     if(target.checked){
@@ -15,7 +15,7 @@ const Slider = ({id, stateVar, setStateVar, labelVar, min=0, max=50}) => {
     <div className="row mb-3" >
                             <label htmlFor="topiclvl" className="form-label">{labelVar} : <span>{stateVar}</span></label>
                             <div className='col-md-8'>
-                            <input type="range" className="form-range" min={min} max={max} id={id} onChange={(e) => setStateVar(e.target.value)} />
+                            <input type="range" className="form-range" min={min} max={max} step={step} id={id} onChange={(e) => setStateVar(e.target.value)} />
                             </div>
                             <div className='col-md-2 ms-2'>
                             <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" onChange={handleCheck} />
