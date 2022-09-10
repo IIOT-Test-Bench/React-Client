@@ -1,14 +1,23 @@
 import React, {useState, useEffect} from 'react';
 import { useSelector } from 'react-redux';
-import generateID from '../../HelperFunctions/generateClientId';
-import generateTopic from '../../HelperFunctions/generateTopic';
 import LoadingScreen from '../../IndexPage/LoadingScreen';
-import { publishMsg, subscribeTopic } from '../../Settings/Store/SettingsCrud';
 import CheckBox from './CheckBox';
 import InfoBox from './InfoBox';
 import Slider from './Slider';
+import io from 'socket.io-client';
+
 
     const ConfigStartDashboard = () => {
+
+    //For the client side socket io connection 
+    const socket = io("http://localhost:3042");
+    // let socket = new io.Socket('localhost',{
+    //     port: 3042
+    // });
+    // socket.connect();
+    const [isConnected, setIsConnected] = useState(socket.connected);
+    const [lastMsg, setMsg] = useState(null);
+
 
     let client = useSelector((state) => state.settings.clientid);
     const [numPub, setNumPub] = useState("");
@@ -29,67 +38,36 @@ import Slider from './Slider';
       
       return () => {
       }
-    }, [])
-
-    //Simulate a publishing sequence
+    }, []) 
+    
     useEffect(() => {
-        
-        
-
-      return () => {
-        
+        socket.on('connect', () => {
+          setIsConnected(true);
+        });
     
+        socket.on('disconnect', () => {
+          setIsConnected(false);
+        });
+    
+        socket.on('yello', (data) => {
+          setMsg(new Date().toISOString());
+          console.log(data);
+
+        });
+    
+        return () => {
+          socket.off('connect');
+          socket.off('disconnect');
+          socket.off('pong');
+        };
+      }, []);
+    
+      const sendEmit = () => {
+        setInterval(() => {
+            socket.emit('testing', "Welcome here");
+        })
+        
       }
-    }, [client])
-
-    //Function to simulate the publishing process
-    const simulatePublishings = (interval=pubInterval, topicLen=4, topicLvl=pubTopicLevel, numOfPublishers=numPub) => {
-
-        let lim = 0;
-        
-        if(client){
-            let temp = setInterval(async () => {
-                lim += 1;
-                if(lim >= numOfPublishers){
-                    clearInterval(temp);
-                }
-    
-            //Generate a random topic for each published message
-            let topic = generateTopic(topicLen, topicLvl);
-
-            //Generate a random message for each publishing 
-            let message = generateID(5);
-            let currentpublished = await publishMsg(client, topic, message);
-            console.log(currentpublished);
-            console.log("The limit for publisher", lim);
-    
-            }, interval)
-        }
-    }
-
-    //Function for the simulation of the subscription of random topic from the already published topics
-    const simulateSubscriptions = () => {
-        let interval = 3000;
-        let topic = "aaaabb";
-        let lim = 0;
-        
-        if(client){
-            let temp = setInterval(async () => {
-                lim += 1;
-                if(lim >= 10){
-                    clearInterval(temp);
-                }
-    
-            let currentsubscribed = await subscribeTopic(client, topic);
-            console.log(currentsubscribed);
-
-            console.log("The limit for subscriptions", lim);
-    
-            }, interval)
-        }
-    }   
-    
-    
     
   return (
     <>
@@ -198,7 +176,7 @@ import Slider from './Slider';
             </div>
             <div className='row'>
                 <div className=''>
-                <button type="button" className="btn btn-primary" onClick={simulatePublishings}>Start Dashboard</button>
+                <button type="button" className="btn btn-primary" onClick={sendEmit}>Start Dashboard</button>
                 </div>
 
             </div>

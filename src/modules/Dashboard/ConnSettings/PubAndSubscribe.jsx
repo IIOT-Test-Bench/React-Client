@@ -167,10 +167,10 @@ useEffect(() => {
   }
 
   //Subscribe to a topic
-  const handleSubscribe = async () => {
+  const handleSubscribe = async (topic) => {
     try{
-      await mqttSub({topic: "aaaabb"});
-      setSubscribedTopic("aaaabb");
+      await mqttSub({topic: topic});
+      setSubscribedTopic(topic);
     }catch(e){
 
     }
