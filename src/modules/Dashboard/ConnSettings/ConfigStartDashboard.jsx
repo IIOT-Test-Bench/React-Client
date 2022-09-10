@@ -10,7 +10,12 @@ import io from 'socket.io-client';
     const ConfigStartDashboard = () => {
 
     //For the client side socket io connection 
-    const socket = io("http://localhost:3042");
+    const socket = io("http://localhost:3042", {
+        withCredentials: true,
+        extraHeaders: {
+          
+        }
+      });
     // let socket = new io.Socket('localhost',{
     //     port: 3042
     // });
