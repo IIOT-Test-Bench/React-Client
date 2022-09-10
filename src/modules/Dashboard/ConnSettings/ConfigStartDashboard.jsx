@@ -5,23 +5,16 @@ import CheckBox from './CheckBox';
 import InfoBox from './InfoBox';
 import Slider from './Slider';
 import io from 'socket.io-client';
+import { startSimulation } from '../../Settings/Store/SettingsCrud';
 
 
     const ConfigStartDashboard = () => {
 
-    //For the client side socket io connection 
-    const socket = io("http://localhost:3042", {
-        withCredentials: true,
-        extraHeaders: {
-          
-        }
-      });
-    // let socket = new io.Socket('localhost',{
-    //     port: 3042
-    // });
-    // socket.connect();
-    const [isConnected, setIsConnected] = useState(socket.connected);
+    
+    const [isConnected, setIsConnected] = useState(false);
     const [lastMsg, setMsg] = useState(null);
+    //Store simulation running values
+    const [simulationOn, SetSimulationOn] = useState(false)
 
 
     let client = useSelector((state) => state.settings.clientid);
@@ -46,31 +39,47 @@ import io from 'socket.io-client';
     }, []) 
     
     useEffect(() => {
-        socket.on('connect', () => {
-          setIsConnected(true);
-        });
-    
-        socket.on('disconnect', () => {
-          setIsConnected(false);
-        });
-    
-        socket.on('yello', (data) => {
-          setMsg(new Date().toISOString());
-          console.log(data);
+      //For the client side socket io connection 
+    const socket = io("http://localhost:3042", {
+      withCredentials: true,
+      extraHeaders: {
+      }
+    });
+    console.log(socket)
 
-        });
+        if(simulationOn){
+          socket.on('connect', () => {
+            setIsConnected(true);
+          });
+      
+          socket.on('disconnect', () => {
+            setIsConnected(false);
+          });
+      
+          socket.on('memory-usage', (data) => {
+            setMsg(data);
+            console.log("Memory Usage:", data);
+          });
+          socket.on('cpu-usage', (data) => {
+            console.log("CPU Usage:", data);
+  
+          });
+        }
     
         return () => {
           socket.off('connect');
           socket.off('disconnect');
-          socket.off('pong');
+          socket.off('memory-usage');
         };
-      }, []);
+      }, [simulationOn]);
     
-      const sendEmit = () => {
-        setInterval(() => {
-            socket.emit('testing', "Welcome here");
-        })
+      const handleSimulation = async (socket) => {
+        let feedback = await startSimulation(client); 
+        console.log(feedback);
+        SetSimulationOn(true);
+        // setInterval(() => {
+        //     socket.emit('testing', "Welcome here");
+        // })
         
       }
     
@@ -181,7 +190,7 @@ import io from 'socket.io-client';
             </div>
             <div className='row'>
                 <div className=''>
-                <button type="button" className="btn btn-primary" onClick={sendEmit}>Start Dashboard</button>
+                <button type="button" className="btn btn-primary" onClick={() => handleSimulation()}>Start Dashboard</button>
                 </div>
 
             </div>
