@@ -65,7 +65,6 @@ const PubAndSubscribe = () => {
     };
 
 useEffect(() => {
-  const topic = "aaaabb";
   if (client) {
     client.on('connect', () => {
       setConnectStatus('Connected');
@@ -85,6 +84,7 @@ useEffect(() => {
     });
     client.on('message', (subscribedTopic, message) => {
       console.log("Heard a msg");
+      console.log(message);
       let receivedMsg = new TextDecoder("utf-8").decode(message);
       console.log(receivedMsg);
       let msg = [subscribedTopic, receivedMsg ];
@@ -97,7 +97,7 @@ useEffect(() => {
   //Subscribe to a topic
   const mqttSub = (subscription) => {
     if (client) {
-      const { topic, qos } = subscription;
+      const { topic } = subscription;
       console.log(topic);
        client.subscribe([topic], () => {
         console.log(`Subscribe to topic '${topic}'`);
@@ -123,7 +123,7 @@ useEffect(() => {
   //Publish a topic
   const mqttPublish = (context) => {
     if (client) {
-      const { topic = "aaaabb", qos = 2, payload = "Welcome to the testing"} = context;
+      const { topic, qos=2, payload} = context;
       client.publish(topic, payload, { qos }, error => {
         if (error) {
           console.log('Publish error: ', error);
@@ -167,19 +167,19 @@ useEffect(() => {
   }
 
   //Subscribe to a topic
-  const handleSubscribe = async (topic) => {
+  const handleSubscribe = async (topc) => {
     try{
-      await mqttSub({topic: topic});
-      setSubscribedTopic(topic);
+      await mqttSub({topic: topc});
+      setSubscribedTopic(topc);
     }catch(e){
 
     }
   }
 
   //Publish message
-  const handlePublish = async () => {
+  const handlePublish = async (topc, msg) => {
     try{
-      await mqttPublish({topic: "aaaabb", qos:2, message: pubMsg});
+      await mqttPublish({topic: topc, qos:2, message: msg});
       console.log(payload);
 
     }catch(e){
@@ -240,7 +240,7 @@ useEffect(() => {
                                     </div>
                                     </div>
                                     </div>
-                                    <button type="button" className="btn btn-primary col col-2" onClick={handlePublish}>Publish</button>
+                                    <button type="button" className="btn btn-primary col col-2" onClick={() => handlePublish(pubTopic, pubMsg)}>Publish</button>
                     </div>
                 </div>
                 </div>
@@ -288,7 +288,7 @@ useEffect(() => {
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" className="btn btn-primary" onClick={handleSubscribe}>Subscribe</button>
+                                <button type="button" className="btn btn-primary" onClick={() => handleSubscribe(subTopic)}>Subscribe</button>
                             </div>
                             </div>
                         </div>
