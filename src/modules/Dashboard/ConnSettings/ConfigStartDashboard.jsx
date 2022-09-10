@@ -9,12 +9,18 @@ import { startSimulation } from '../../Settings/Store/SettingsCrud';
 
 
     const ConfigStartDashboard = () => {
-
-    
+      
     const [isConnected, setIsConnected] = useState(false);
-    const [lastMsg, setMsg] = useState(null);
+    const [msg, setMsg] = useState(null);
     //Store simulation running values
-    const [simulationOn, SetSimulationOn] = useState(false)
+    const [simulationOn, setSimulationOn] = useState(false)
+    const [endSocket, SetEndSocket] = useState(false)
+    const [loading, setLoading] = useState(false);
+
+    //Usage statistics
+    const [cpu, setCpu] = useState(`${0}%`);
+    const [memUsage, setMemUsage] = useState(`${0} MB`);
+
 
 
     let client = useSelector((state) => state.settings.clientid);
@@ -40,12 +46,15 @@ import { startSimulation } from '../../Settings/Store/SettingsCrud';
     
     useEffect(() => {
       //For the client side socket io connection 
-    const socket = io("http://localhost:3042", {
-      withCredentials: true,
-      extraHeaders: {
-      }
-    });
-    console.log(socket)
+      const socket = io("http://localhost:3042", {
+        withCredentials: true,
+        forceNew: true,
+        extraHeaders: {
+        }
+      });
+    if(endSocket){
+      socket.disconnect();
+    }
 
         if(simulationOn){
           socket.on('connect', () => {
@@ -59,9 +68,11 @@ import { startSimulation } from '../../Settings/Store/SettingsCrud';
           socket.on('memory-usage', (data) => {
             setMsg(data);
             console.log("Memory Usage:", data);
+            setMemUsage(data);
           });
           socket.on('cpu-usage', (data) => {
             console.log("CPU Usage:", data);
+            setCpu(data);
   
           });
         }
@@ -71,16 +82,23 @@ import { startSimulation } from '../../Settings/Store/SettingsCrud';
           socket.off('disconnect');
           socket.off('memory-usage');
         };
-      }, [simulationOn]);
+      }, [simulationOn, endSocket]);
     
       const handleSimulation = async (socket) => {
-        let feedback = await startSimulation(client); 
-        console.log(feedback);
-        SetSimulationOn(true);
-        // setInterval(() => {
-        //     socket.emit('testing', "Welcome here");
-        // })
-        
+        setLoading(true);
+
+        if(simulationOn){
+          SetEndSocket(true);
+          setLoading(false);
+        }else{
+          try{
+            await startSimulation(client); 
+            setSimulationOn(true);
+            setLoading(true);
+          }catch(e){
+            console.log(e);
+          }
+        }
       }
     
   return (
@@ -104,8 +122,8 @@ import { startSimulation } from '../../Settings/Store/SettingsCrud';
                             <Slider id={"pubtopiclevel"} stateVar={pubTopicLevel} setStateVar={setPubTopicLevel} labelVar={"Topic Level"} max={"5"}/>
                             </div>
 
-                            <InfoBox tagId={"cpu"} label={"CPU"} value={randnum}/>
-                            <InfoBox tagId={"cpu"} label={"CPU"} value={randnum}/>
+                            <InfoBox tagId={"cpu"} label={"CPU"} value={cpu}/>
+                            <InfoBox tagId={"memory"} label={"Memory USage"} value={memUsage}/>
 
                             </div>
                     </form>
@@ -190,7 +208,10 @@ import { startSimulation } from '../../Settings/Store/SettingsCrud';
             </div>
             <div className='row'>
                 <div className=''>
-                <button type="button" className="btn btn-primary" onClick={() => handleSimulation()}>Start Dashboard</button>
+                <button type="button" className="btn btn-primary" onClick={() => handleSimulation()}>
+                {loading? <span className="spinner-border spinner-border-sm mx-3" role="status" aria-hidden="true"></span> : ""}
+                  Start Dashboard
+                  </button>
                 </div>
 
             </div>

@@ -118,11 +118,10 @@ export const disconnectBroker = async (clientId) => {
   //Function for the simulation of the subscription of random topic from the already published topics
   export const startSimulation = async ( clientId, topic ) => {
     try{
-        
-        const result = await axios.post("http://localhost:3001/simulate", {
+        axios.post("http://localhost:3001/simulate", {
             clientId
         })
-        return result;
+        return "Successfully called simulation endpoint";
 
     }catch(err){
         console.log(err)
