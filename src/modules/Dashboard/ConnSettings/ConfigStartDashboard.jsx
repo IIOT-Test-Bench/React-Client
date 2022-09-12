@@ -29,6 +29,7 @@ const socket = io("http://localhost:3042", {
 
 
     let client = useSelector((state) => state.settings.clientid);
+    let sampClient = "SampleClient1"
     const [numPub, setNumPub] = useState("");
     const [numSub, setNumSub] = useState(null);
     const [pubInterval, setPubInterval] = useState("");
@@ -51,38 +52,37 @@ const socket = io("http://localhost:3042", {
     
     useEffect(() => {
       //For the client side socket io connection 
-          socket.on('connect', () => {
-            setLoading(false);
-            setIsConnected(true);
-            console.log("yesssss")
-            socket.emit("clientId", client);
-          });
-          socket.on('connectionStatus', (data) => {
-            console.log("The details", data);
-          });
-
-          socket.on('IDReceived', () => {
-            console.log("The id has been received")
-          })
-
-      
-          socket.on('disconnect', () => {
-            setIsConnected(false);
-            setLoading(false);
-          });
-      
-          socket.on('memory-usage', (data) => {
-            setMsg(data);
-            console.log("Memory Usage:", data);
-            setMemUsage(data);
-          });
-          socket.on('cpu-usage', (data) => {
-            console.log("CPU Usage:", data);
-            setCpu(data);
+            socket.on('connect', () => {
+              setLoading(false);
+              setIsConnected(true);
+              console.log("yesssss")
+              socket.emit("clientId", client);
+            });
+            socket.on('connectionStatus', (data) => {
+              console.log("The details", data);
+            });
   
-          });
+            socket.on('IDReceived', () => {
+              console.log("The id has been received")
+            })
+  
         
+            socket.on('disconnect', () => {
+              setIsConnected(false);
+              setLoading(false);
+            });
+        
+            socket.on('memory-usage', (data) => {
+              setMsg(data);
+              console.log("Memory Usage:", data);
+              setMemUsage(data);
+            });
+            socket.on('cpu-usage', (data) => {
+              console.log("CPU Usage:", data);
+              setCpu(data);
     
+            });
+        
         return () => {
           socket.off('connect');
           socket.off('disconnect');
@@ -91,20 +91,24 @@ const socket = io("http://localhost:3042", {
       }, [simulationOn, endSocket, client]);
     
       const handleSimulation = () => {
-        setLoading(true);
-        console.log(simulationOn);
-              
+        setLoading(true);              
 
         if(isConnected){
           setEndSocket(true);
           setSimulationOn(false);
           socket.close();
+          setIsConnected(false);
+          setLoading(false);
+          console.log(isConnected);
+
         }else{
             setEndSocket(false);
             setSimulationOn(true);
             console.log(socket); 
             console.log("yesssss");
             socket.connect();
+            console.log(isConnected);
+
                         
         }
       }
