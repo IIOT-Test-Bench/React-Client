@@ -5,16 +5,21 @@ import CheckBox from './CheckBox';
 import InfoBox from './InfoBox';
 import Slider from './Slider';
 import io from 'socket.io-client';
-import { startSimulation } from '../../Settings/Store/SettingsCrud';
 
-
+const socket = io("http://localhost:3042", {
+        withCredentials: true,
+        forceNew: true,
+        extraHeaders: {
+        }
+      });
+  
     const ConfigStartDashboard = () => {
       
     const [isConnected, setIsConnected] = useState(false);
     const [msg, setMsg] = useState(null);
     //Store simulation running values
     const [simulationOn, setSimulationOn] = useState(false)
-    const [endSocket, SetEndSocket] = useState(false)
+    const [endSocket, setEndSocket] = useState(false)
     const [loading, setLoading] = useState(false);
 
     //Usage statistics
@@ -46,23 +51,24 @@ import { startSimulation } from '../../Settings/Store/SettingsCrud';
     
     useEffect(() => {
       //For the client side socket io connection 
-      const socket = io("http://localhost:3042", {
-        withCredentials: true,
-        forceNew: true,
-        extraHeaders: {
-        }
-      });
-    if(endSocket){
-      socket.disconnect();
-    }
-
-        if(simulationOn){
           socket.on('connect', () => {
+            setLoading(false);
             setIsConnected(true);
+            console.log("yesssss")
+            socket.emit("clientId", client);
           });
+          socket.on('connectionStatus', (data) => {
+            console.log("The details", data);
+          });
+
+          socket.on('IDReceived', () => {
+            console.log("The id has been received")
+          })
+
       
           socket.on('disconnect', () => {
             setIsConnected(false);
+            setLoading(false);
           });
       
           socket.on('memory-usage', (data) => {
@@ -75,35 +81,37 @@ import { startSimulation } from '../../Settings/Store/SettingsCrud';
             setCpu(data);
   
           });
-        }
+        
     
         return () => {
           socket.off('connect');
           socket.off('disconnect');
           socket.off('memory-usage');
         };
-      }, [simulationOn, endSocket]);
+      }, [simulationOn, endSocket, client]);
     
-      const handleSimulation = async (socket) => {
+      const handleSimulation = () => {
         setLoading(true);
+        console.log(simulationOn);
+              
 
-        if(simulationOn){
-          SetEndSocket(true);
-          setLoading(false);
+        if(isConnected){
+          setEndSocket(true);
+          setSimulationOn(false);
+          socket.close();
         }else{
-          try{
-            await startSimulation(client); 
+            setEndSocket(false);
             setSimulationOn(true);
-            setLoading(true);
-          }catch(e){
-            console.log(e);
-          }
+            console.log(socket); 
+            console.log("yesssss");
+            socket.connect();
+                        
         }
       }
     
   return (
     <>
-    {!client ? <LoadingScreen message={"Kindly connect to broker to run simulation"}/> :
+    {client ? <LoadingScreen message={"Kindly connect to broker to run simulation"}/> :
     <div className=''>
         {/* <h2 className='my-4'></h2> */}
         <div className="row">
