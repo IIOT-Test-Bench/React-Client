@@ -179,7 +179,7 @@ useEffect(() => {
   //Publish message
   const handlePublish = async (topc, msg) => {
     try{
-      await mqttPublish({topic: topc, qos:2, message: msg});
+      await mqttPublish({topic: topc, qos:2, payload: msg});
       console.log(payload);
 
     }catch(e){
@@ -240,7 +240,7 @@ useEffect(() => {
                                     </div>
                                     </div>
                                     </div>
-                                    <button type="button" className="btn btn-primary col col-2" onClick={() => handlePublish(pubTopic, pubMsg)}>Publish</button>
+                                    <button type="button" className="btn btn-primary col col-2" onClick={() => {handlePublish(pubTopic, pubMsg); console.log(pubTopic, pubMsg)}}>Publish</button>
                     </div>
                 </div>
                 </div>
