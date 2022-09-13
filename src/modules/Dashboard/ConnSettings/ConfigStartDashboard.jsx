@@ -29,7 +29,6 @@ const socket = io("http://localhost:3042", {
 
 
     let client = useSelector((state) => state.settings.clientid);
-    let sampClient = "SampleClient1"
     const [numPub, setNumPub] = useState("");
     const [numSub, setNumSub] = useState(null);
     const [pubInterval, setPubInterval] = useState("");
@@ -104,7 +103,7 @@ const socket = io("http://localhost:3042", {
             console.log(socket); 
             console.log("yesssss");
             socket.connect();
-            socket.emit("clientId", sampClient, (feedback) => {
+            socket.emit("clientId", client, (feedback) => {
               console.log("Client Id received", feedback)
             });
             socket.emit('startSimulation', {numOfPubs:20, interval:2, topicLevel:2})
