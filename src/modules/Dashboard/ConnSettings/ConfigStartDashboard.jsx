@@ -132,7 +132,7 @@ const socket = io("http://localhost:3042", {
                             <div className="form-group row">
                             <div className="my-3">
                             <Slider id={"numpub"} stateVar={numPub} setStateVar={setNumPub} labelVar={"No. of Publisher"} min={"1"} max={"10"}/>
-                            <Slider id={"pubinterval"} stateVar={pubInterval} setStateVar={setPubInterval} labelVar={"Interval"} min={"10"} max={"10000"} step={"1"} />
+                            <Slider id={"pubinterval"} stateVar={pubInterval} setStateVar={setPubInterval} labelVar={"Interval (ms)"} min={"10"} max={"10000"} step={"1"} />
                             <Slider id={"pubtopiclevel"} stateVar={pubTopicLevel} setStateVar={setPubTopicLevel} labelVar={"Topic Level"} max={"5"}/>
                             </div>
 
@@ -156,17 +156,18 @@ const socket = io("http://localhost:3042", {
                     <form>
                     <div className="form-group row">
                             <div className="my-3">
-                                <CheckBox stateVar={compression} setStateVar={setCompression} labelVar={"Compression"}/>
-                                <CheckBox stateVar={encryption} setStateVar={setEncryption} labelVar={"Encryption"}/>
-                                <CheckBox stateVar={persistence} setStateVar={setPersistence} labelVar={"Persistence"}/>
+                                <CheckBox stateVar={compression} setStateVar={setCompression} labelVar={"Compression"} disabled={true}/>
+                                <CheckBox stateVar={encryption} setStateVar={setEncryption} labelVar={"Encryption"} disabled={true}/>
+                                <CheckBox stateVar={persistence} setStateVar={setPersistence} labelVar={"Persistence"} disabled={true}/>
                             
                             </div>
-                            <div className="my-3">
-                            <div className="spinner-border" style={{width: "6rem", height: "6rem"}} role="status">
+                            <div className="my-3 d-flex justify-content-center">
+                            {/* <div className="spinner-border" style={{width: "6rem", height: "6rem"}} role="status">
                             <div className="spinner-grow" style={{width: "3rem", height: "3rem"}} role="status">
                             <span className="visually-hidden">Loading...</span>
                             </div>
-                            </div>
+                            </div> */}
+                            <img src='gear.svg' alt='gear button' />
                             
                             </div>
 
@@ -206,7 +207,7 @@ const socket = io("http://localhost:3042", {
                     <form>
                             <div className="form-group row">
                             <div className="my-3">
-                            <Slider id={"numsub"} stateVar={numSub} setStateVar={setNumSub} labelVar={"No. of Publisher"} />
+                            <Slider id={"numsub"} stateVar={numSub} setStateVar={setNumSub} labelVar={"No. of Subscribers"} />
                             <Slider id={"subtopiclevel"} stateVar={subTopicLevel} setStateVar={setSubTopicLevel} labelVar={"Topic Levels"} />
                             </div>
 
