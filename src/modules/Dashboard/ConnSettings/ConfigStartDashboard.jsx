@@ -55,10 +55,7 @@ const socket = io("http://localhost:3042", {
             socket.on('connect', () => {
               setLoading(false);
               setIsConnected(true);
-              console.log("yesssss")
-              socket.emit("clientId", sampClient, (feedback) => {
-
-              });
+              console.log("yesssss");
             });
             socket.on('connectionStatus', (data) => {
               console.log("The details", data);
@@ -88,36 +85,40 @@ const socket = io("http://localhost:3042", {
           socket.off('disconnect');
           socket.off('memory-usage');
         };
-      }, [simulationOn, endSocket, sampClient]);
+      }, []);
     
       const handleSimulation = () => {
-        setLoading(true);              
 
-        if(isConnected){
-          setEndSocket(true);
-          setSimulationOn(false);
-          socket.emit('stopSimulation', {numOfPubs:10})
-          socket.close();
-          setIsConnected(false);
-          setLoading(false);
-          console.log(isConnected);
-
-        }else{
-            setEndSocket(false);
+        switch(isConnected){
+          case true:
+            setEndSocket(true);
+            setSimulationOn(false);
+            socket.emit('stopSimulation', {numOfPubs:10})
+            socket.close();
+            setIsConnected(false);
+            setLoading(false);
+            console.log(isConnected);
+          break;
+          case false:
             setSimulationOn(true);
             console.log(socket); 
             console.log("yesssss");
             socket.connect();
+            socket.emit("clientId", sampClient, (feedback) => {
+              console.log("Client Id received", feedback)
+            });
             socket.emit('startSimulation', {numOfPubs:20, interval:2, topicLevel:2})
+            setIsConnected(true);
             console.log(isConnected);
-
-                        
+          break;
+          default:
         }
+        
       }
     
   return (
     <>
-    {client ? <LoadingScreen message={"Kindly connect to broker to run simulation"}/> :
+    {!client ? <LoadingScreen message={"Kindly connect to broker to run simulation"}/> :
     <div className=''>
         {/* <h2 className='my-4'></h2> */}
         <div className="row">
