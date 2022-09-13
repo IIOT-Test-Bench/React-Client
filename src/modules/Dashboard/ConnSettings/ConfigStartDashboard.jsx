@@ -56,7 +56,9 @@ const socket = io("http://localhost:3042", {
               setLoading(false);
               setIsConnected(true);
               console.log("yesssss")
-              socket.emit("clientId", client);
+              socket.emit("clientId", sampClient, (feedback) => {
+
+              });
             });
             socket.on('connectionStatus', (data) => {
               console.log("The details", data);
@@ -66,7 +68,6 @@ const socket = io("http://localhost:3042", {
               console.log("The id has been received")
             })
   
-        
             socket.on('disconnect', () => {
               setIsConnected(false);
               setLoading(false);
@@ -80,7 +81,6 @@ const socket = io("http://localhost:3042", {
             socket.on('cpu-usage', (data) => {
               console.log("CPU Usage:", data);
               setCpu(data);
-    
             });
         
         return () => {
@@ -88,7 +88,7 @@ const socket = io("http://localhost:3042", {
           socket.off('disconnect');
           socket.off('memory-usage');
         };
-      }, [simulationOn, endSocket, client]);
+      }, [simulationOn, endSocket, sampClient]);
     
       const handleSimulation = () => {
         setLoading(true);              
@@ -96,6 +96,7 @@ const socket = io("http://localhost:3042", {
         if(isConnected){
           setEndSocket(true);
           setSimulationOn(false);
+          socket.emit('stopSimulation', {numOfPubs:10})
           socket.close();
           setIsConnected(false);
           setLoading(false);
@@ -107,6 +108,7 @@ const socket = io("http://localhost:3042", {
             console.log(socket); 
             console.log("yesssss");
             socket.connect();
+            socket.emit('startSimulation', {numOfPubs:20, interval:2, topicLevel:2})
             console.log(isConnected);
 
                         
@@ -129,8 +131,8 @@ const socket = io("http://localhost:3042", {
                         <form>
                             <div className="form-group row">
                             <div className="my-3">
-                            <Slider id={"numpub"} stateVar={numPub} setStateVar={setNumPub} labelVar={"No. of Publisher"} min={"1"} max={"100000"}/>
-                            <Slider id={"pubinterval"} stateVar={pubInterval} setStateVar={setPubInterval} labelVar={"Interval"} min={"1000"} max={"10000"} step={"1000"} />
+                            <Slider id={"numpub"} stateVar={numPub} setStateVar={setNumPub} labelVar={"No. of Publisher"} min={"1"} max={"10"}/>
+                            <Slider id={"pubinterval"} stateVar={pubInterval} setStateVar={setPubInterval} labelVar={"Interval"} min={"10"} max={"10000"} step={"1"} />
                             <Slider id={"pubtopiclevel"} stateVar={pubTopicLevel} setStateVar={setPubTopicLevel} labelVar={"Topic Level"} max={"5"}/>
                             </div>
 
