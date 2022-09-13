@@ -71,11 +71,11 @@ const socket = io("http://localhost:3042", {
         
             socket.on('memory-usage', (data) => {
               setMsg(data);
-              console.log("Memory Usage:", data);
+              // console.log("Memory Usage:", data);
               setMemUsage(data);
             });
             socket.on('cpu-usage', (data) => {
-              console.log("CPU Usage:", data);
+              // console.log("CPU Usage:", data);
               setCpu(data);
             });
         
@@ -92,7 +92,8 @@ const socket = io("http://localhost:3042", {
           case true:
             setEndSocket(true);
             setSimulationOn(false);
-            socket.emit('stopSimulation', {numOfPubs:10})
+            socket.emit('stopSimulation', {numOfPubs:10});
+            console.log("Stopped logging the info...")
             socket.close();
             setIsConnected(false);
             setLoading(false);
@@ -106,7 +107,7 @@ const socket = io("http://localhost:3042", {
             socket.emit("clientId", client, (feedback) => {
               console.log("Client Id received", feedback)
             });
-            socket.emit('startSimulation', {numOfPubs:20, interval:2, topicLevel:2})
+            socket.emit('startSimulation', {numOfPubs:20, interval:2000, topicLevel:2})
             setIsConnected(true);
             console.log(isConnected);
           break;
