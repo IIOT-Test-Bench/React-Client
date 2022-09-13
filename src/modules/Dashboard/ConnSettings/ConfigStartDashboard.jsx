@@ -172,20 +172,20 @@ const socket = io("http://localhost:3042", {
 
                             <div className="row col-md-10">
                                 <div className="col">
-                                <InfoBox tagId={"cpu"} label={"Received"} value={randnum} labellen={6} boxlen={5}/>
+                                <InfoBox tagId={"received"} label={"Received"} value={randnum} labellen={6} boxlen={5}/>
                                 </div>
                                 <div className="col">
-                                <InfoBox tagId={"cpu"} label={"Sent"} value={randnum} labellen={6} boxlen={5}/>
+                                <InfoBox tagId={"sent"} label={"Sent"} value={randnum} labellen={6} boxlen={5}/>
                                 </div>
                             </div>
-                            <InfoBox tagId={"cpu"} label={"CPU"} value={randnum}/>
-                            <InfoBox tagId={"cpu"} label={"Memory"} value={randnum}/>
+                            <InfoBox tagId={"cpu"} label={"CPU"} value={cpu}/>
+                            <InfoBox tagId={"memory"} label={"Memory"} value={memUsage}/>
                             <div className="row">
                                 <div className="col">
-                                <InfoBox tagId={"cpu"} label={"Network IN"} value={randnum} labellen={6} boxlen={5}/>
+                                <InfoBox tagId={"netin"} label={"Network IN"} value={randnum} labellen={6} boxlen={5}/>
                                 </div>
                                 <div className="col">
-                                <InfoBox tagId={"cpu"} label={"Network OUT"} value={randnum} labellen={6} boxlen={5}/>
+                                <InfoBox tagId={"netout"} label={"Network OUT"} value={randnum} labellen={6} boxlen={5}/>
                                 </div>
                             </div>
                     </div>
@@ -210,8 +210,8 @@ const socket = io("http://localhost:3042", {
                             <Slider id={"subtopiclevel"} stateVar={subTopicLevel} setStateVar={setSubTopicLevel} labelVar={"Topic Levels"} />
                             </div>
 
-                            <InfoBox tagId={"cpu"} label={"CPU"} value={randnum}/>
-                            <InfoBox tagId={"cpu"} label={"CPU"} value={randnum}/>
+                            <InfoBox tagId={"cpu"} label={"CPU"} value={cpu}/>
+                            <InfoBox tagId={"memory"} label={"Memory Usage"} value={memUsage}/>
                             </div>
                     </form>
 
