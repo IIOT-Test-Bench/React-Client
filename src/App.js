@@ -11,7 +11,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="" element={<IndexPage />}/>
+        <Route path="/" element={<IndexPage />}/>
         <Route path="dash" element={<DashBase />}/>
         <Route path="configconn" element={<ConfigConn />}/>
         <Route path="startdashboard" element={<StartDashboard />}/>
