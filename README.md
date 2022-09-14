@@ -36,13 +36,17 @@ Then open [http://localhost:3000](http://localhost:3000) to view it in your brow
 - Users connects to the broker to server endpoint
 - For every user connection a new client instance is created
   
-- Main parameters required:
+- Main parameters `required`:
   - Host or IP Address of broker
   - Port number
   - Timeout
   - Username
   - Password
-  - Client ID //User can use a generated client ID
+  - Client ID //`User can use a generated client ID`
+
+This is the route or page to also disconnect the main connection
+
+Upon a successful connection to the broker through the server, the user or client gets feedback of the `client ID`
 
 ### *`Running the simulation`*
 
@@ -52,9 +56,41 @@ The Dashboard or the Simulation page can only be accessed after successful conne
 
 The Client instance from the main connection is then used to publish, subscribe and listen to messages
 
-During simulation the statistics such as CPU Usage, Memory Usage, Number of published topics and number of messages of topics subscribed to are displayed.
+During simulation the statistics such as `CPU Usage, Memory Usage, Number of published topics` and `number of messages of topics subscribed to`, are displayed.
 
 Realtime update from the server is done over an established websocket connection
+
+To Run the simulation, user must set the parameters by using the sliders
+
+- Each slider has a corresponding checkbox that set the slider value to a random value of the range of its connected slider
+
+- To use the slider component, you first import it and pass the parameters or props
+  
+  - The states it would work with, below is a sample instance of a property and its setter function
+
+    ```code
+    const [loading, setLoading] = useState(false);
+    ```
+
+  - These are then passed as the stateVar and setStateVar respectively
+
+    ```code
+    <Slider id={"numpub"} stateVar={numPub} setStateVar={setNumPub} labelVar={"No. of Publisher"} min={"1"} max={"10"}/>
+    ```
+
+After setting the required parameters, user can then start simulation. This sets up a websocket connection to the server
+
+Then client from the main connection is used for the publishing and subscribing to topics during the simulation
+
+The `client ID` is emitted from the connected socket client and publisher and subscriber instances are setup by calling the client object from the `Client Class`
+
+```code
+const client = Client.getClient(clientId);
+```
+
+While the websocket connection is active, count of all received messages from subscribed topics are passed to the connected socket client which is displayed in the `infobox component`
+
+The list of all subscribed topics during the simulation are emitted or passed on to the connected socket client, which can be viewed at the `Graphs route` on the dashboard side navigation
 
 ### *`Listening to messages`*
 
@@ -65,6 +101,8 @@ The publish and subscribe route allows a user to listen to messages even during 
 It create a separate connection to the broker (not through the server / node app)
 
 Allows a user to subscribe to entered topics and also publish messages
+
+User would first establish the connection by clicking the `listen to messages` button. The same would be used for disconnection
 
 ### React / Client Side
 
