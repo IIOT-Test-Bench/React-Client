@@ -25,6 +25,7 @@ const socket = io("http://localhost:3042", {
     //Usage statistics
     const [cpu, setCpu] = useState(`${0}%`);
     const [memUsage, setMemUsage] = useState(`${0} MB`);
+    const [sent, setSent] = useState(0);
 
 
 
@@ -77,6 +78,10 @@ const socket = io("http://localhost:3042", {
             socket.on('cpu-usage', (data) => {
               // console.log("CPU Usage:", data);
               setCpu(data);
+            });
+            socket.on('sent', (data) => {
+              console.log("Sent messages:", data);
+              setSent(data);
             });
         
         return () => {
@@ -177,7 +182,7 @@ const socket = io("http://localhost:3042", {
                                 <InfoBox tagId={"received"} label={"Received"} value={randnum} labellen={6} boxlen={5}/>
                                 </div>
                                 <div className="col">
-                                <InfoBox tagId={"sent"} label={"Sent"} value={randnum} labellen={6} boxlen={5}/>
+                                <InfoBox tagId={"sent"} label={"Sent"} value={sent} labellen={6} boxlen={5}/>
                                 </div>
                             </div>
                             <InfoBox tagId={"cpu"} label={"CPU"} value={cpu}/>
