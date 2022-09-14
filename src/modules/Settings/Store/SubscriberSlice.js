@@ -11,8 +11,13 @@ const subscriber = createSlice({
     },
     reducers: {
         addToSubscribedTopics (state, action) {
-            const {topic} = action.payload;
-            state.messages.push(topic);
+            const {topic} = action.payload; 
+            let topics = [...topic];   
+            for(let i of topics){
+                if(!state.subscribedTopics.includes(i)){
+                    state.subscribedTopics.push(i);
+                }
+            }       
         },
         setNumberLimit (state, action) {
           const {numberlimit} = action.payload;
