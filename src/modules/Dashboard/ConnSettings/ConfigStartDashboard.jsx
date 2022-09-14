@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import LoadingScreen from '../../IndexPage/LoadingScreen';
 import CheckBox from './CheckBox';
 import InfoBox from './InfoBox';
 import Slider from './Slider';
 import io from 'socket.io-client';
+import {subscriberActions} from '../../Settings/Store/SubscriberSlice';
 
 const socket = io("http://localhost:3042", {
         withCredentials: true,
@@ -14,6 +15,7 @@ const socket = io("http://localhost:3042", {
       });
   
     const ConfigStartDashboard = () => {
+      const dispatch = useDispatch();
       
     const [isConnected, setIsConnected] = useState(false);
     const [msg, setMsg] = useState(null);
@@ -26,6 +28,9 @@ const socket = io("http://localhost:3042", {
     const [cpu, setCpu] = useState(`${0}%`);
     const [memUsage, setMemUsage] = useState(`${0} MB`);
     const [sent, setSent] = useState(0);
+    const [received, setReceived] = useState(0);
+    const [netIn, setNetIn] = useState(0);
+    const [netOut, setNetOut] = useState(0);
 
 
 
@@ -55,14 +60,14 @@ const socket = io("http://localhost:3042", {
             socket.on('connect', () => {
               setLoading(false);
               setIsConnected(true);
-              console.log("yesssss");
+              // console.log("yesssss");
             });
             socket.on('connectionStatus', (data) => {
               console.log("The details", data);
             });
   
             socket.on('IDReceived', () => {
-              console.log("The id has been received")
+              // console.log("The id has been received")
             })
   
             socket.on('disconnect', () => {
@@ -80,9 +85,25 @@ const socket = io("http://localhost:3042", {
               setCpu(data);
             });
             socket.on('sent', (data) => {
-              console.log("Sent messages:", data);
+              // console.log("Sent messages:", data);
               setSent(data);
             });
+            socket.on('received', (data) => {
+              // console.log("Received messages:", data);
+              setReceived(data);
+            });
+            socket.on('netin', (data) => {
+              // console.log("Net In:", data);
+              setNetIn(data);
+            });
+            socket.on('netout', (data) => {
+              // console.log("Net Out:", data);
+              setNetOut(data);
+            });
+            socket.on('topics', (data) => {
+              console.log("Topics:", data);
+              dispatch(subscriberActions.addToSubscribedTopics({topic:data}));
+            });          
         
         return () => {
           socket.off('connect');
@@ -97,7 +118,7 @@ const socket = io("http://localhost:3042", {
           case true:
             setEndSocket(true);
             setSimulationOn(false);
-            socket.emit('stopSimulation', {numOfPubs:10});
+            socket.emit('stopSimulation', {numOfPubs:numPub});
             console.log("Stopped logging the info...")
             socket.close();
             setIsConnected(false);
@@ -112,7 +133,7 @@ const socket = io("http://localhost:3042", {
             socket.emit("clientId", client, (feedback) => {
               console.log("Client Id received", feedback)
             });
-            socket.emit('startSimulation', {numOfPubs:20, interval:2000, topicLevel:2})
+            socket.emit('startSimulation', {numOfPubs:numPub, pubInterval:pubInterval, pubTopicLevel:pubTopicLevel, numOfSubs:numSub, subTopicLevel:subTopicLevel})
             setIsConnected(true);
             console.log(isConnected);
           break;
@@ -179,7 +200,7 @@ const socket = io("http://localhost:3042", {
 
                             <div className="row col-md-10">
                                 <div className="col">
-                                <InfoBox tagId={"received"} label={"Received"} value={randnum} labellen={6} boxlen={5}/>
+                                <InfoBox tagId={"received"} label={"Received"} value={received} labellen={6} boxlen={5}/>
                                 </div>
                                 <div className="col">
                                 <InfoBox tagId={"sent"} label={"Sent"} value={sent} labellen={6} boxlen={5}/>
@@ -189,10 +210,10 @@ const socket = io("http://localhost:3042", {
                             <InfoBox tagId={"memory"} label={"Memory"} value={memUsage}/>
                             <div className="row">
                                 <div className="col">
-                                <InfoBox tagId={"netin"} label={"Network IN"} value={randnum} labellen={6} boxlen={5}/>
+                                <InfoBox tagId={"netin"} label={"Network IN"} value={netIn} labellen={6} boxlen={5}/>
                                 </div>
                                 <div className="col">
-                                <InfoBox tagId={"netout"} label={"Network OUT"} value={randnum} labellen={6} boxlen={5}/>
+                                <InfoBox tagId={"netout"} label={"Network OUT"} value={netOut} labellen={6} boxlen={5}/>
                                 </div>
                             </div>
                     </div>
