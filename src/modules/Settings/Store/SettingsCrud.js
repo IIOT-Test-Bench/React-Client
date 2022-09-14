@@ -1,10 +1,11 @@
 import axios from "axios"
 
+let baseUrl = "http://localhost:3001";
 //Connect to a broker through node server api
 export const connectBroker = async (host, port, clientId, timeout, username, password) => {
 
     try{
-        const result = await axios.post("http://localhost:3001/connect", {
+        const result = await axios.post(`${baseUrl}/connect`, {
             host: host,
             port: port,
             clientId: clientId,
@@ -23,7 +24,7 @@ export const connectBroker = async (host, port, clientId, timeout, username, pas
 export const publishMsg = async ( clientId, topic, message ) => {
     try{
         
-        const result = await axios.post("http://localhost:3001/publish", {
+        const result = await axios.post(`${baseUrl}/publish`, {
             clientId,
             topic,
             message,   
@@ -40,7 +41,7 @@ export const publishMsg = async ( clientId, topic, message ) => {
 export const subscribeTopic = async ( clientId, topic ) => {
     try{
         
-        const result = await axios.post("http://localhost:3001/subscribe", {
+        const result = await axios.post(`${baseUrl}/subscribe`, {
             clientId, 
             topic
         })
@@ -56,8 +57,8 @@ export const subscribeTopic = async ( clientId, topic ) => {
 export const disconnectBroker = async (clientId) => {
 
     try{
-        const result = await axios.post("http://localhost:3001/disconnect", {
-            clientId: clientId
+        const result = await axios.post(`${baseUrl}/disconnect`, {
+            clientId,
         })
         return result;
 
@@ -65,3 +66,5 @@ export const disconnectBroker = async (clientId) => {
         console.log(err)
     }
 }
+
+ 
