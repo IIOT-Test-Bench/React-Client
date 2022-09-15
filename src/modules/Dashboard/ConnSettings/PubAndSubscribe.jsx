@@ -15,6 +15,7 @@ const PubAndSubscribe = () => {
     const [subTopic, setSubTopic] = useState("");
     const [subscribedTopic, setSubscribedTopic] = useState("aaaabb");
     const [subTopicLevel, setSubTopicLevel] = useState("");
+    const [subscribedTopics, setSubscribedTopics] = useState([]);
 
     //Publisher topic and topic level 
     const [pubTopic, setPubTopic] = useState("");
@@ -101,6 +102,7 @@ useEffect(() => {
       console.log(topic);
        client.subscribe([topic], () => {
         console.log(`Subscribe to topic '${topic}'`);
+        setSubscribedTopics(prev => [...prev, topic])
       });
     }
   };
@@ -256,6 +258,13 @@ useEffect(() => {
                         <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                         Add New Topic Subscription
                         </button>
+                        <div>
+                          <ul>
+                          {
+                          setSubscribedTopics?.map((elem, index) => <li key={index}>{elem}</li>)
+                          }
+                          </ul>
+                        </div>
 
                         {/* <!-- Modal --> */}
                         <div className="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
