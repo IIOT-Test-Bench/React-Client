@@ -20,7 +20,7 @@ points are tested and the results are visualized in a dashboard.
 
 ## **Usage**
 
-View [the main app](http://iiot-bench.herokuapp.com) on netlify.
+View [the main app](https://iiot-test-bench-project.netlify.app) on netlify.
 
 View [the server](http://iiot-bench.herokuapp.com) hosted on heroku.
 
