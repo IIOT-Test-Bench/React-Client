@@ -7,7 +7,7 @@ import Slider from './Slider';
 import io from 'socket.io-client';
 import {subscriberActions} from '../../Settings/Store/SubscriberSlice';
 
-const socket = io("https://iiot-bench.herokuapp.com:9000", {
+const socket = io("https://iiot-bench.herokuapp.com", {
         withCredentials: true,
         forceNew: true,
         extraHeaders: {
