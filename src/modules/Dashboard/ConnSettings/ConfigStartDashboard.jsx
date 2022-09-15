@@ -10,6 +10,7 @@ import {subscriberActions} from '../../Settings/Store/SubscriberSlice';
 const socket = io("https://iiot-bench.herokuapp.com", {
         withCredentials: true,
         forceNew: true,
+        transports: ['websocket'],
         extraHeaders: {
         }
       });
