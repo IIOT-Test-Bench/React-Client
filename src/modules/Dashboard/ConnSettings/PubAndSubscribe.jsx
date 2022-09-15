@@ -84,10 +84,10 @@ useEffect(() => {
       setConnectStatus('Reconnecting');
     });
     client.on('message', (subscribedTopic, message) => {
-      console.log("Heard a msg");
-      console.log(message);
+      // console.log("Heard a msg");
+      // console.log(message);
       let receivedMsg = new TextDecoder("utf-8").decode(message);
-      console.log(receivedMsg);
+      // console.log(receivedMsg);
       let msg = [subscribedTopic, receivedMsg ];
       setPayload(prev => [...prev, msg]);
     });
@@ -263,7 +263,7 @@ useEffect(() => {
                           <ul class="list-group">
                           {
                           subscribedTopics?.map((elem, index) => (
-                          <li key={index} class="list-group-item d-flex justify-content-between align-items-center">
+                          <li key={index} class="list-group-item d-flex justify-content-between align-items-center my-2">
                             {elem}
                             <span class="badge badge-primary badge-pill">{(payload?.filter(val => val[0] === elem)).length}</span>
                           </li>
@@ -322,8 +322,10 @@ useEffect(() => {
                         <div className="form-group row">
                         <div className="card">
                         <div className="card-body">
-                            <h6 className="card-subtitle mb-2 text-muted">Messages</h6>
-                            {payload?.map((elem, index) => <p className="card-text" key={index}>{elem[0]}: {elem[1]}</p>)}
+                            <h6 className="card-subtitle mb-3 text-muted">Topic: Message</h6>
+                            <ul>
+                            {payload?.map((elem, index) => <li className="list-item" key={index}>{elem[0]}: {elem[1]}</li>)}
+                            </ul>
                         </div>
                         </div>
                     </div>
