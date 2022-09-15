@@ -142,14 +142,14 @@ const ConfigBroker = () => {
                 <div className="col-md-4" >
                 <label htmlFor="port" className="col col-form-label">Port</label>
                 <div className="col">
-                <input type="number" className="form-control" id="port" defaultValue={"1883"} onChange={(e) => {setPort(e.target.value)}} disabled={preventTyping} required={true}/>
+                <input type="number" className="form-control" id="port" placeholder={"1883"} onChange={(e) => {setPort(e.target.value)}} disabled={preventTyping} required={true}/>
                 </div>
                 </div>
 
                 <div className="col-md-2" >
                 <label htmlFor="timeout" className="col col-form-label">Timeout</label>
                 <div className="col">
-                <input type="number" className="form-control" id="timeout" defaultValue={"4000"} onChange={(e) => {setTimeout(e.target.value)}} disabled={preventTyping} required={true}/>
+                <input type="number" className="form-control" id="timeout" placeholder={"4000"} onChange={(e) => {setTimeout(e.target.value)}} disabled={preventTyping} required={true}/>
                 </div>
                 </div>
             </div>
