@@ -31,9 +31,14 @@ const ConfigBroker = () => {
   const [username, setUsername] = useState(useSelector(state => state.settings.username));
   const [password, setPassword] = useState(useSelector(state => state.settings.password));
 
-  if(connStatus){
-    setPreventTyping(true);
-  }
+  useEffect(() => {
+    if(connStatus){
+      setPreventTyping(true);
+    }
+    return () => {
+    }
+  }, [connStatus])
+  
 
 
   useEffect(() => {
@@ -130,21 +135,21 @@ const ConfigBroker = () => {
                 <div className="col-md-6" >
                 <label htmlFor="host" className="col col-form-label">Host or IP</label>
                 <div className="col">
-                <input type="text" className="form-control" id="host" placeholder="Host or IP Address" onChange={(e) => {setHost(e.target.value)}} disabled={preventTyping}/>
+                <input type="text" className="form-control" id="host" placeholder="Host or IP Address" onChange={(e) => {setHost(e.target.value)}} disabled={preventTyping} required={true}/>
                 </div>
                 </div>
 
                 <div className="col-md-4" >
                 <label htmlFor="port" className="col col-form-label">Port</label>
                 <div className="col">
-                <input type="number" className="form-control" id="port" defaultValue={"1883"} onChange={(e) => {setPort(e.target.value)}} disabled={preventTyping}/>
+                <input type="number" className="form-control" id="port" defaultValue={"1883"} onChange={(e) => {setPort(e.target.value)}} disabled={preventTyping} required={true}/>
                 </div>
                 </div>
 
                 <div className="col-md-2" >
                 <label htmlFor="timeout" className="col col-form-label">Timeout</label>
                 <div className="col">
-                <input type="number" className="form-control" id="timeout" defaultValue={"4000"} onChange={(e) => {setTimeout(e.target.value)}} disabled={preventTyping}/>
+                <input type="number" className="form-control" id="timeout" defaultValue={"4000"} onChange={(e) => {setTimeout(e.target.value)}} disabled={preventTyping} required={true}/>
                 </div>
                 </div>
             </div>
@@ -153,7 +158,7 @@ const ConfigBroker = () => {
                 <div className="col-md-6" >
                 <label htmlFor="protocol" className="col col-form-label">Protocol</label>
                 <div className="col">
-                  <select className="form-select" defaultValue={"TCP"} aria-label="Select protocol" disabled={preventTyping}>
+                  <select className="form-select" defaultValue={"TCP"} aria-label="Select protocol" disabled={true}>
                   <option value="tcp">TCP</option>
                   <option value="ssl">SSL</option>
                   </select>
@@ -165,13 +170,13 @@ const ConfigBroker = () => {
                 <div className="col-md-6" >
                 <label htmlFor="username" className="col col-form-label">Username</label>
                 <div className="col">
-                <input type="text" className="form-control" id="username" placeholder="Enter Username: emqx" autoComplete={"password"} onChange={(e) => {setUsername(e.target.value)}} disabled={preventTyping}/>
+                <input type="text" className="form-control" id="username" placeholder="Enter Username: emqx" autoComplete={"password"} onChange={(e) => {setUsername(e.target.value)}} disabled={preventTyping} required={true}/>
                 </div>
                 </div>
                 <div className="col-md-6" >
                 <label htmlFor="password" className="col col-form-label">Password</label>
                 <div className="col">
-                <input type="password" className="form-control" id="password" autoComplete={"current-password"} onChange={(e) => {setPassword(e.target.value)}} disabled={preventTyping}/>
+                <input type="password" className="form-control" id="password" autoComplete={"current-password"} onChange={(e) => {setPassword(e.target.value)}} disabled={preventTyping} required={true}/>
                 </div>
                 </div>
             </div>
@@ -180,7 +185,7 @@ const ConfigBroker = () => {
                 <div className="col-md-8" >
                 <label htmlFor="clientid" className="col col-form-label">Client Id</label>
                 <div className="col">
-                <input type="text" className="form-control" id="clientid" placeholder='Enter Client ID' defaultValue={getID? randId : ""} onChange={(e) => {setRandId(e.target.value)}} disabled={preventTyping}/>
+                <input type="text" className="form-control" id="clientid" placeholder='Enter Client ID' defaultValue={getID? randId : ""} onChange={(e) => {setRandId(e.target.value)}} disabled={preventTyping} required={true}/>
                 </div>
                 </div>
                 <div className="col-md-4" >
