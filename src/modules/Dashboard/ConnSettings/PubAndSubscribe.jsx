@@ -34,7 +34,7 @@ const PubAndSubscribe = () => {
   const [connState, setconnState] = useState("Disconnected");
 
     const clientId = `listeningClient_${Math.random().toString(16).slice(3)}`;
-    const connectUrl = `ws://broker.emqx.io:8084/mqtt`;
+    const connectUrl = `wss://broker.emqx.io:8084/mqtt`;
     const options = {
       keepalive: 60,
       clientId: clientId,
