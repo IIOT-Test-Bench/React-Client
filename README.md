@@ -50,7 +50,7 @@ Upon a successful connection to the broker through the server, the user or clien
 
 ### *`Running the simulation`*
 
-![Simulation](/pages/IIOTSimulation.png?raw=true "Optional Title")
+![Simulation](/pages/IIOTSimulation.PNG?raw=true "Optional Title")
 
 The Dashboard or the Simulation page can only be accessed after successful connection to the broker
 
@@ -94,7 +94,7 @@ The list of all subscribed topics during the simulation are emitted or passed on
 
 ### *`Listening to messages`*
 
-![Listening Client](/pages/IIOTListenPage.png?raw=true "Optional Title")
+![Listening Client](/pages/IIOTListenPage.PNG?raw=true "Optional Title")
 
 The publish and subscribe route allows a user to listen to messages even during a simulation
 
