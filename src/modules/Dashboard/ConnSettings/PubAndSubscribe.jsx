@@ -261,7 +261,7 @@ useEffect(() => {
                         <div>
                           <ul>
                           {
-                          setSubscribedTopics?.map((elem, index) => <li key={index}>{elem}</li>)
+                          subscribedTopics?.map((elem, index) => <li key={index}>{elem}</li>)
                           }
                           </ul>
                         </div>
