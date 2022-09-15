@@ -11,7 +11,6 @@ const ConfigBroker = () => {
   //Set a prevent typing states for no input when connnected
   const [preventTyping, setPreventTyping] = useState(false);
 
-
   const dispatch = useDispatch();
   //Store the current client
   //Later would be added to redux store
@@ -32,6 +31,10 @@ const ConfigBroker = () => {
   const [username, setUsername] = useState(useSelector(state => state.settings.username));
   const [password, setPassword] = useState(useSelector(state => state.settings.password));
 
+  if(connStatus){
+    setPreventTyping(true);
+  }
+
 
   useEffect(() => {
     switch(connStatus){
@@ -44,8 +47,12 @@ const ConfigBroker = () => {
           dispatch(setConnStatusText({connStatusText:"Disconnect"}));
           dispatch(setStatusCode({statusCode:"success"}));
           dispatch(setConnState({connState:"Connected"}));
-          const clientIdField = document.querySelector("#clientid");
-          clientIdField.value = connectedClient;
+          document.querySelector("#clientid").value = connectedClient;
+          document.querySelector("#host").value = host;
+          document.querySelector("#port").value = port;
+          document.querySelector("#timeout").value = timeout;
+          document.querySelector("#username").value = username;
+          document.querySelector("#password").value = password;
 
           break;
       default:
@@ -53,7 +60,7 @@ const ConfigBroker = () => {
       }
     return () => {
     }
-  }, [connStatus, dispatch, connectedClient])
+  }, [connStatus, dispatch, connectedClient, host, port, timeout, username, password])
 
 
   //Connect to the broker on click or submission
