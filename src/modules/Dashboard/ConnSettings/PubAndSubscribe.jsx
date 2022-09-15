@@ -102,7 +102,9 @@ useEffect(() => {
       console.log(topic);
        client.subscribe([topic], () => {
         console.log(`Subscribe to topic '${topic}'`);
-        setSubscribedTopics(prev => [...prev, topic])
+        if(!subscribedTopics.includes(topic)){
+          setSubscribedTopics(prev => [...prev, topic])
+        }
       });
     }
   };
