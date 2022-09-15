@@ -159,6 +159,7 @@ useEffect(() => {
           setconnState("Disconnected");
           setConnStatusText("Listen to messages")
           setPayload([]);
+          setSubscribedTopics([]);
         }        
       }else{
         let feedback = await mqttConnect(connectUrl, options);
@@ -182,7 +183,7 @@ useEffect(() => {
   const handlePublish = async (topc, msg) => {
     try{
       await mqttPublish({topic: topc, qos:2, payload: msg});
-      console.log(payload);
+      // console.log(payload);
 
     }catch(e){
 
@@ -259,9 +260,14 @@ useEffect(() => {
                         Add New Topic Subscription
                         </button>
                         <div>
-                          <ul>
+                          <ul class="list-group">
                           {
-                          subscribedTopics?.map((elem, index) => <li key={index}>{elem}</li>)
+                          subscribedTopics?.map((elem, index) => (
+                          <li key={index} class="list-group-item d-flex justify-content-between align-items-center">
+                            {elem}
+                            <span class="badge badge-primary badge-pill">{(payload?.filter(val => val[0] === elem)).length}</span>
+                          </li>
+                          ))
                           }
                           </ul>
                         </div>
@@ -317,7 +323,7 @@ useEffect(() => {
                         <div className="card">
                         <div className="card-body">
                             <h6 className="card-subtitle mb-2 text-muted">Messages</h6>
-                            {payload?.map((elem, index) => <p className="card-text" key={index}>{elem[1]}</p>)}
+                            {payload?.map((elem, index) => <p className="card-text" key={index}>{elem[0]}: {elem[1]}</p>)}
                         </div>
                         </div>
                     </div>
