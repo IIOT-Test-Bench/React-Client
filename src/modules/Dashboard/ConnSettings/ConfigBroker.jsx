@@ -26,11 +26,11 @@ const ConfigBroker = () => {
   let connState = useSelector(state => state.settings.connState);
 
   //Set form data states
-  const [host, setHost] = useState("");
-  const [port, setPort] = useState("");
-  const [timeout, setTimeout] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [host, setHost] = useState(useSelector(state => state.settings.host));
+  const [port, setPort] = useState(useSelector(state => state.settings.port));
+  const [timeout, setTimeout] = useState(useSelector(state => state.settings.conntimeout));
+  const [username, setUsername] = useState(useSelector(state => state.settings.username));
+  const [password, setPassword] = useState(useSelector(state => state.settings.password));
 
 
   useEffect(() => {
@@ -44,6 +44,8 @@ const ConfigBroker = () => {
           dispatch(setConnStatusText({connStatusText:"Disconnect"}));
           dispatch(setStatusCode({statusCode:"success"}));
           dispatch(setConnState({connState:"Connected"}));
+          const clientIdField = document.querySelector("#clientid");
+          clientIdField.value = connectedClient;
 
           break;
       default:
@@ -51,7 +53,7 @@ const ConfigBroker = () => {
       }
     return () => {
     }
-  }, [connStatus, dispatch])
+  }, [connStatus, dispatch, connectedClient])
 
 
   //Connect to the broker on click or submission
