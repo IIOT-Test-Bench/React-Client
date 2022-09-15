@@ -77,11 +77,11 @@ const socket = io("https://iiot-bench.herokuapp.com:9000", {
         
             socket.on('memory-usage', (data) => {
               setMsg(data);
-              // console.log("Memory Usage:", data);
+              console.log("Memory Usage:", data);
               setMemUsage(data);
             });
             socket.on('cpu-usage', (data) => {
-              // console.log("CPU Usage:", data);
+              console.log("CPU Usage:", data);
               setCpu(data);
             });
             socket.on('sent', (data) => {
