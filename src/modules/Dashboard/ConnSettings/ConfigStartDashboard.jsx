@@ -8,8 +8,8 @@ import io from 'socket.io-client';
 import {subscriberActions} from '../../Settings/Store/SubscriberSlice';
 
 const socket = io("https://iiot-bench.herokuapp.com:9000", {
-        withCredentials: true
-        // transports: ['websocket']
+        withCredentials: true,
+        transports: ['websocket','polling']
       });
   
     const ConfigStartDashboard = () => {
