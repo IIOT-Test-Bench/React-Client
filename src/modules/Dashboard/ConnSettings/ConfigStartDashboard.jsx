@@ -30,35 +30,23 @@ const socket = io("https://iiot-bench.herokuapp.com:9000", {
     const [netIn, setNetIn] = useState(0);
     const [netOut, setNetOut] = useState(0);
 
-
-
     let client = useSelector((state) => state.settings.clientid);
     const [numPub, setNumPub] = useState("");
     const [numSub, setNumSub] = useState(null);
     const [pubInterval, setPubInterval] = useState("");
     const [pubTopicLevel, setPubTopicLevel] = useState("");
     const [subTopicLevel, setSubTopicLevel] = useState(null);
-    const [randnum, setRandNum] = useState(0);
 
     const [compression, setCompression] = useState(false);
     const [encryption, setEncryption] = useState(false);
     const [persistence, setPersistence] = useState(false);
-
-    useEffect(() => {
-        setInterval(() => {
-            setRandNum(Math.floor(Math.random()*100));
-        }, 1000);
-      
-      return () => {
-      }
-    }, []) 
     
     useEffect(() => {
       //For the client side socket io connection 
             socket.on('connect', () => {
               setLoading(false);
               setIsConnected(true);
-              // console.log("yesssss");
+              console.log("testing out");
             });
             socket.on('connectionStatus', (data) => {
               console.log("The details", data);
@@ -126,8 +114,8 @@ const socket = io("https://iiot-bench.herokuapp.com:9000", {
           case false:
             setSimulationOn(true);
             console.log(socket); 
-            console.log("yesssss");
-            socket.connect();
+            // console.log("yesssss");
+            socket.open();
             socket.emit("clientId", client, (feedback) => {
               console.log("Client Id received", feedback)
             });
