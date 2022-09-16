@@ -92,9 +92,9 @@ const socket = io("https://iiot-bench.herokuapp.com:9000", {
             });          
         
         return () => {
-          socket.off('connect');
-          socket.off('disconnect');
-          socket.off('memory-usage');
+          // socket.off('connect');
+          // socket.off('disconnect');
+          // socket.off('memory-usage');
         };
       }, []);
     
