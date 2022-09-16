@@ -13,7 +13,7 @@ const PubAndSubscribe = () => {
 
     //Subscriber topic and topic level 
     const [subTopic, setSubTopic] = useState("");
-    const [subscribedTopic, setSubscribedTopic] = useState("aaaabb");
+    const [subscribedTopic, setSubscribedTopic] = useState("");
     const [subTopicLevel, setSubTopicLevel] = useState("");
     const [subscribedTopics, setSubscribedTopics] = useState([]);
 
@@ -92,7 +92,7 @@ useEffect(() => {
       setPayload(prev => [...prev, msg]);
     });
   }
-}, [client, subscribedTopic]);
+}, [client]);
 
 
   //Subscribe to a topic
