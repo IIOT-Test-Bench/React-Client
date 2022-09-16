@@ -118,8 +118,8 @@ useEffect(() => {
           console.log('Unsubscribe error', error)
           return
         }else{
-        console.log('Unsubscribed')
-        }
+          console.log('Unsubscribed');
+       }
       });
     }
   };
@@ -180,6 +180,20 @@ useEffect(() => {
 
     }
   }
+
+  //Unsubscribe from a topic
+  const handleUnsubscribe = async (topc) => {
+    try{
+      await mqttUnSub({topic: topc});
+      let updateUnSub = subscribedTopics.filter(val => val !== topc);
+      setSubscribedTopics(updateUnSub);
+      setSubscribedTopic(topc);
+    }catch(e){
+
+    }
+  }
+
+  
 
   //Publish message
   const handlePublish = async (topc, msg) => {
@@ -262,12 +276,13 @@ useEffect(() => {
                         Add New Topic Subscription
                         </button>
                         <div>
-                          <ul class="list-group">
+                          <ul className="list-group">
                           {
                           subscribedTopics?.map((elem, index) => (
-                          <li key={index} class="list-group-item d-flex justify-content-between align-items-center my-2">
+                          <li key={index} className="list-group-item d-flex justify-content-between align-items-center my-2">
+                            <button type="button" className="btn btn-danger" onClick={() => handleUnsubscribe(elem)}>Unsubscribe</button>
                             {elem}
-                            <span class="badge badge-primary badge-pill">{(payload?.filter(val => val[0] === elem)).length}</span>
+                            <span className="badge badge-primary badge-pill">{(payload?.filter(val => val[0] === elem)).length}</span>
                           </li>
                           ))
                           }

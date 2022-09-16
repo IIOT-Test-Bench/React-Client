@@ -9,8 +9,7 @@ import {subscriberActions} from '../../Settings/Store/SubscriberSlice';
 
 const socket = io("https://iiot-bench.herokuapp.com:9000", {
         withCredentials: true,
-        forceNew: true,
-        transports: ['polling']
+        transports: ['websocket']
       });
   
     const ConfigStartDashboard = () => {
