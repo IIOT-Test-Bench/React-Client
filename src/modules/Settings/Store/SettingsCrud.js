@@ -1,6 +1,6 @@
 import axios from "axios"
 
-let baseUrl = "http://iiot-bench.herokuapp.com";
+let baseUrl = "https://iiot-bench.herokuapp.com";
 //Connect to a broker through node server api
 export const connectBroker = async (host, port, clientId, timeout, username, password) => {
 
