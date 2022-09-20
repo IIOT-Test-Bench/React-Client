@@ -20,7 +20,9 @@ const socket = io("https://iiot-bench.herokuapp.com", {
     const [simulationOn, setSimulationOn] = useState(false)
     const [endSocket, setEndSocket] = useState(false)
     const [loading, setLoading] = useState(false);
-    const [connectedUsers, setConnectedUsers] = useState(false);
+    const [connectedUsers, setConnectedUsers] = useState(0);
+    const [simulationButton, setSimulationButton] = useState("Start Simulation");
+
 
     //Usage statistics
     const [cpu, setCpu] = useState(`${0}%`);
@@ -113,8 +115,10 @@ const socket = io("https://iiot-bench.herokuapp.com", {
             socket.emit('stopSimulation', {numOfPubs:numPub});
             console.log("Stopped logging the info...")
             socket.close();
+            document.querySelector("#gear").classList.remove("connected-gear")
             setIsConnected(false);
             setLoading(false);
+            setSimulationButton("Start Simulation");
             console.log(isConnected);
           break;
           case false:
@@ -128,6 +132,8 @@ const socket = io("https://iiot-bench.herokuapp.com", {
             socket.emit('startSimulation', {numOfPubs:numPub, pubInterval:pubInterval, pubTopicLevel:pubTopicLevel, numOfSubs:numSub, subTopicLevel:subTopicLevel})
             setIsConnected(true);
             console.log(isConnected);
+            document.querySelector("#gear").classList.add("connected-gear");
+            setSimulationButton("Stop Simulation");
           break;
           default:
         }
@@ -136,7 +142,7 @@ const socket = io("https://iiot-bench.herokuapp.com", {
     
   return (
     <>
-    {!client ? <LoadingScreen message={"Kindly connect to broker to run simulation"}/> :
+    {client ? <LoadingScreen message={"Kindly connect to broker to run simulation"}/> :
     <div className=''>
         {/* <h2 className='my-4'></h2> */}
         <div className="row">
@@ -180,14 +186,17 @@ const socket = io("https://iiot-bench.herokuapp.com", {
                                 <CheckBox stateVar={persistence} setStateVar={setPersistence} labelVar={"Persistence"} disabled={true}/>
                             
                             </div>
-                            <div className="my-3 d-flex justify-content-center">
+                            <div className="my-3 d-flex justify-content-center flex-column align-items-center">
                             {/* <div className="spinner-border" style={{width: "6rem", height: "6rem"}} role="status">
                             <div className="spinner-grow" style={{width: "3rem", height: "3rem"}} role="status">
                             <span className="visually-hidden">Loading...</span>
                             </div>
                             </div> */}
-                            <img src='gear.svg' alt='gear button' />
-                            
+                            <span >Connected clients</span>
+                            <div>
+                            <img src='gear.svg' alt='gear button' className='connected-gear' id='gear' />
+                            <span className='connected-users'>{connectedUsers}</span>
+                            </div>
                             </div>
 
                             <div className="row col-md-10">
@@ -244,7 +253,7 @@ const socket = io("https://iiot-bench.herokuapp.com", {
                 <div className=''>
                 <button type="button" className="btn btn-primary" onClick={() => handleSimulation()}>
                 {loading? <span className="spinner-border spinner-border-sm mx-3" role="status" aria-hidden="true"></span> : ""}
-                  Start Dashboard
+                  {simulationButton}
                   </button>
                 </div>
 

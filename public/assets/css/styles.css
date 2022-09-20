@@ -26,6 +26,38 @@
   max-height: 500px;
   overflow-y: scroll;
 }
+
+.connected-users{
+  position: relative;
+  top: 7px;
+  right: 59px;
+  font-weight: bolder;
+  color: gray;
+  font-size: 2em;
+}
+
+.rotate {
+  animation: rotation 2s;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+.linear {
+  animation-timing-function: linear;
+}
+
+.connected-gear {
+  animation: rotation 2s linear infinite;
+}
+
+
 /* "
 
 .container, .container-fluid, .container-lg, .container-md, .container-xl
