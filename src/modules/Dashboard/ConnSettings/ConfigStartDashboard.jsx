@@ -20,6 +20,7 @@ const socket = io("https://iiot-bench.herokuapp.com", {
     const [simulationOn, setSimulationOn] = useState(false)
     const [endSocket, setEndSocket] = useState(false)
     const [loading, setLoading] = useState(false);
+    const [connectedUsers, setConnectedUsers] = useState(false);
 
     //Usage statistics
     const [cpu, setCpu] = useState(`${0}%`);
@@ -88,7 +89,12 @@ const socket = io("https://iiot-bench.herokuapp.com", {
             socket.on('topics', (data) => {
               console.log("Topics:", data);
               dispatch(subscriberActions.addToSubscribedTopics({topic:data, clientId:client}));
-            });          
+            }); 
+            socket.on('connected-users', (data) => {
+              // console.log("Net Out:", data);
+              setConnectedUsers(data);
+              console.log("Connected Users: ", data)
+            });         
         
         return () => {
           // socket.off('connect');
