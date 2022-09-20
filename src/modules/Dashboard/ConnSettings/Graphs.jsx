@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import BarChart from '../Charts/BarChart'
+// import BarChart from '../Charts/BarChart'
 
 const Graphs = () => {
   let client = useSelector((state) => state.settings.clientid);
@@ -13,7 +13,7 @@ const Graphs = () => {
         </div> */}
         <div className="container">
           <h1 className='m-2'>
-            {client}
+            Client ID: {client}
           </h1>
         <table className="table table-hover">
   <thead>

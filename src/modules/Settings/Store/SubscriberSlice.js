@@ -12,7 +12,8 @@ const subscriber = createSlice({
     reducers: {
         addToSubscribedTopics (state, action) {
             const {clientId, topic} = action.payload; 
-            let topics = [...topic];   
+            let topics = [...topic]; 
+            state.subscribedTopics[clientId] = [];  
             for(let i of topics){
                 state.subscribedTopics[clientId].push(i);
             }       
