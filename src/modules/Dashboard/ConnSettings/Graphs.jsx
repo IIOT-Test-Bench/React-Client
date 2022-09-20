@@ -3,7 +3,8 @@ import { useSelector } from 'react-redux'
 import BarChart from '../Charts/BarChart'
 
 const Graphs = () => {
-  let subTopics = useSelector(state => state.subscriber.subscribedTopics);
+  let client = useSelector((state) => state.settings.clientid);
+  let subTopics = useSelector(state => state.subscriber.subscribedTopics[client]);
   console.log(subTopics)
   return (
     <>
@@ -11,6 +12,9 @@ const Graphs = () => {
           <BarChart />
         </div> */}
         <div className="container">
+          <h1 className='m-2'>
+            {client}
+          </h1>
         <table className="table table-hover">
   <thead>
     <tr>

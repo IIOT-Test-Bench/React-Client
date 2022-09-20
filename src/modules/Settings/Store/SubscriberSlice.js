@@ -7,16 +7,14 @@ const subscriber = createSlice({
         numberlimit: 40,
         msginterval: 10,
         topicLevel: 2,        
-        subscribedTopics: []
+        subscribedTopics: {}
     },
     reducers: {
         addToSubscribedTopics (state, action) {
-            const {topic} = action.payload; 
+            const {clientId, topic} = action.payload; 
             let topics = [...topic];   
             for(let i of topics){
-                if(!state.subscribedTopics.includes(i)){
-                    state.subscribedTopics.push(i);
-                }
+                state.subscribedTopics[clientId].push(i);
             }       
         },
         setNumberLimit (state, action) {

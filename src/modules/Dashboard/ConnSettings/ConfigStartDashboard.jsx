@@ -87,7 +87,7 @@ const socket = io("https://iiot-bench.herokuapp.com", {
             });
             socket.on('topics', (data) => {
               console.log("Topics:", data);
-              dispatch(subscriberActions.addToSubscribedTopics({topic:data}));
+              dispatch(subscriberActions.addToSubscribedTopics({topic:data, clientId:client}));
             });          
         
         return () => {
