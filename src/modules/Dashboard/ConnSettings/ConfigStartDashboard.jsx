@@ -194,7 +194,7 @@ const socket = io("https://iiot-bench.herokuapp.com", {
                             </div> */}
                             <span >Connected clients</span>
                             <div>
-                            <img src='gear.svg' alt='gear button' className='connected-gear' id='gear' />
+                            <img src='gear.svg' alt='gear button' id='gear' />
                             <span className='connected-users'>{connectedUsers}</span>
                             </div>
                             </div>

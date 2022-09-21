@@ -1,6 +1,6 @@
 import React from 'react'
 
-const InfoBox = ({tagId, label, value, labellen=3, boxlen=9}) => {
+const InfoBox = ({tagId, label, value, labellen=5, boxlen=7}) => {
   return (
     <>
       <div className="form-group row my-1">
