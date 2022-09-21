@@ -142,7 +142,7 @@ const socket = io("https://iiot-bench.herokuapp.com", {
     
   return (
     <>
-    {client ? <LoadingScreen message={"Kindly connect to broker to run simulation"}/> :
+    {!client ? <LoadingScreen message={"Kindly connect to broker to run simulation"}/> :
     <div className=''>
         {/* <h2 className='my-4'></h2> */}
         <div className="row">
