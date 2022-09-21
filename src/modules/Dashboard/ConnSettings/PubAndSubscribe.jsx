@@ -1,12 +1,12 @@
 import React, {useState, useEffect} from 'react';
 // import { useDispatch, useSelector } from 'react-redux';
-import LoadingScreen from '../../IndexPage/LoadingScreen';
 import mqtt from 'mqtt/dist/mqtt';
+import swal from 'sweetalert';
+
 
 
 const PubAndSubscribe = () => {
 
-    let cclient = "";
     //Dispatch action from subscriber slice
     // const dispatch = useDispatch();
     
@@ -101,10 +101,15 @@ useEffect(() => {
       const { topic } = subscription;
       console.log(topic);
        client.subscribe([topic], () => {
-        console.log(`Subscribe to topic '${topic}'`);
+        // console.log(`Subscribe to topic '${topic}'`);
         if(!subscribedTopics.includes(topic)){
-          setSubscribedTopics(prev => [...prev, topic])
-        }
+          setSubscribedTopics(prev => [...prev, topic]);
+          swal({
+            title: `Topic: ${topic}`,
+            text: `Successfully subscribed to topic '${topic}'`,
+            icon: "success",
+          });
+        } 
       });
     }
   };
@@ -132,7 +137,12 @@ useEffect(() => {
         if (error) {
           console.log('Publish error: ', error);
         }else{
-        console.log("Published");
+        // console.log("Published");
+        swal({
+          title: `Topic: ${topic}`,
+          text: `Message has been successfully published to ${topic}`,
+          icon: "success",
+        });
         }
       });
     }
@@ -164,8 +174,7 @@ useEffect(() => {
           setSubscribedTopics([]);
         }        
       }else{
-        let feedback = await mqttConnect(connectUrl, options);
-        console.log("Checking feedback", feedback);
+        await mqttConnect(connectUrl, options);
       }
     }catch(e){
       }
@@ -174,8 +183,24 @@ useEffect(() => {
   //Subscribe to a topic
   const handleSubscribe = async (topc) => {
     try{
-      await mqttSub({topic: topc});
-      setSubscribedTopic(topc);
+      if(client){
+        if(topc){
+          await mqttSub({topic: topc});
+          setSubscribedTopic(topc);
+        }else{
+          swal({
+            title: "Empty Fields",
+            text: "Kindly enter topic to subscribe to",
+            icon: "warning",
+          });
+        }
+      }else{
+        swal({
+          title: "Not Connected",
+          text: "Kindly connect to subscribe to messages",
+          icon: "warning",
+        });
+      }
     }catch(e){
 
     }
@@ -187,7 +212,7 @@ useEffect(() => {
       await mqttUnSub({topic: topc});
       let updateUnSub = subscribedTopics.filter(val => val !== topc);
       setSubscribedTopics(updateUnSub);
-      setSubscribedTopic(topc);
+      // setSubscribedTopic(topc);
     }catch(e){
 
     }
@@ -198,7 +223,24 @@ useEffect(() => {
   //Publish message
   const handlePublish = async (topc, msg) => {
     try{
-      await mqttPublish({topic: topc, qos:2, payload: msg});
+      if(client){
+        if(topc && msg){
+          await mqttPublish({topic: topc, qos:2, payload: msg});
+        }else{
+          swal({
+            title: "Empty Field",
+            text: "Kindly provide topic and message",
+            icon: "warning",
+          });
+        }
+      }
+      else{
+        swal({
+          title: "Not Connected",
+          text: "Kindly connect to publish",
+          icon: "warning",
+        });
+      }
       // console.log(payload);
 
     }catch(e){
@@ -208,7 +250,7 @@ useEffect(() => {
 
   return (
     <>
-    {cclient ? <LoadingScreen /> :
+    { 
     <div>
 <div className='row my-5'>
         <h2 className='col'><span id="connState" style={{color: "orange", fontSize: "0.7em"}}>{connState}</span> 

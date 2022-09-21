@@ -7,6 +7,7 @@ import Slider from './Slider';
 import io from 'socket.io-client';
 import {subscriberActions} from '../../Settings/Store/SubscriberSlice';
 import {setSimulationConnection, setSimulationButton} from '../../Settings/Store/SettingsSlice';
+import swal from 'sweetalert';
 
 const socket = io("https://iiot-bench.herokuapp.com", {
         forceNew: true
@@ -46,10 +47,9 @@ const socket = io("https://iiot-bench.herokuapp.com", {
             socket.on('connection', () => {
               setLoading(false);
               dispatch(setSimulationConnection({simulationSignal:true}));
-              console.log("testing out");
             });
             socket.on('connectionStatus', (data) => {
-              console.log("The details", data);
+              console.log("Socket connection feedback", data);
             });
   
             socket.on('IDReceived', () => {
@@ -64,15 +64,15 @@ const socket = io("https://iiot-bench.herokuapp.com", {
             socket.on('connected-users', (data) => {
               // console.log("Net Out:", data);
               setConnectedUsers(data);
-              console.log("Connected Users: ", data)
+              // console.log("Connected Users: ", data)
             });   
         
             socket.on('memory-usage', (data) => {
-              console.log("Memory Usage:", data);
+              // console.log("Memory Usage:", data);
               setMemUsage(data);
             });
             socket.on('cpu-usage', (data) => {
-              console.log("CPU Usage:", data);
+              // console.log("CPU Usage:", data);
               setCpu(data);
             });
             socket.on('sent', (data) => {
@@ -92,7 +92,7 @@ const socket = io("https://iiot-bench.herokuapp.com", {
               setNetOut(data);
             });
             socket.on('topics', (data) => {
-              console.log("Topics:", data);
+              // console.log("Topics:", data);
               dispatch(subscriberActions.addToSubscribedTopics({topic:data, clientId:client}));
             });       
         
@@ -104,7 +104,7 @@ const socket = io("https://iiot-bench.herokuapp.com", {
       }, []);
     
       const handleSimulation = () => {
-
+      if(numPub && pubInterval && pubTopicLevel && numSub){
         switch(isConnected){
           case true:
             socket.emit('stopSimulation', {numOfPubs:numPub});
@@ -131,8 +131,14 @@ const socket = io("https://iiot-bench.herokuapp.com", {
             dispatch(setSimulationButton({simulationText:"Stop Simulation"}));
           break;
           default:
+          }
+        }else{
+          swal({
+            title: "Empty Slider Values",
+            text: "Kindly set values for all the sliders",
+            icon: "warning",
+          });
         }
-        
       }
     
   return (

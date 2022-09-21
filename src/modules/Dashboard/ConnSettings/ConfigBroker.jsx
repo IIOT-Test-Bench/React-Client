@@ -3,8 +3,7 @@ import generateID from '../../HelperFunctions/generateClientId';
 import { connectBroker, disconnectBroker } from '../../Settings/Store/SettingsCrud';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentClient, setConnState, setConnStatus, setConnStatusText, setStatusCode, resetConnection} from '../../Settings/Store/SettingsSlice';
-// import generateTopic from '../../HelperFunctions/generateTopic';
-// import { generateMessage } from '../../HelperFunctions/generateMessage';
+import swal from 'sweetalert';
 
 const ConfigBroker = () => {
 
@@ -82,12 +81,21 @@ const ConfigBroker = () => {
           setPreventTyping(false);
         }        
       }else{
-        let feedback = await connectBroker(host, port, randId, timeout, username, password);
-        if(feedback.statusText === "OK"){
-          dispatch(setConnStatus({connStatus:true}));
-          dispatch(setConnState({connState:"Connected"}));
-          dispatch(setCurrentClient({host:host, port:port, clientid:randId, timeout:timeout, username:username, password:password}));
-          setPreventTyping(true);
+        if(host && port && randId && timeout && username && password){
+          let feedback = await connectBroker(host, port, randId, timeout, username, password);
+          if(feedback.statusText === "OK"){
+            dispatch(setConnStatus({connStatus:true}));
+            dispatch(setConnState({connState:"Connected"}));
+            dispatch(setCurrentClient({host:host, port:port, clientid:randId, timeout:timeout, username:username, password:password}));
+            setPreventTyping(true);
+          }
+        }else{
+          dispatch(setConnState({connState:"Disconnected"}));
+          swal({
+            title: "Empty Fields",
+            text: "Values from these field are needed for the connection",
+            icon: "warning",
+          });
         }
       }
     }catch(e){
@@ -110,8 +118,7 @@ const ConfigBroker = () => {
   }
 
   return (
-    <div className=''>
-        
+    <div className=''>        
         <div className='m-4'>
         <form>
         <div className='row my-5'>
