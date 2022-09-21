@@ -19,7 +19,7 @@ const socket = io("https://iiot-bench.herokuapp.com", {
     //Store simulation running values
     const [loading, setLoading] = useState(false);
     const [connectedUsers, setConnectedUsers] = useState(0);
-    const [simulationButton, setSimulationButton] = useState("Start Simulation");
+    let simulationButton = useSelector(state => state.settings.simulationButton);
 
 
     //Usage statistics
