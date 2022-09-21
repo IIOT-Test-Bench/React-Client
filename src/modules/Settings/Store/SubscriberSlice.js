@@ -5,7 +5,6 @@ const subscriber = createSlice({
     initialState: {
         clientId: "",
         numberlimit: 40,
-        msginterval: 10,
         topicLevel: 2,        
         subscribedTopics: {}
     },
@@ -21,10 +20,6 @@ const subscriber = createSlice({
         setNumberLimit (state, action) {
           const {numberlimit} = action.payload;
           state.numberlimit = numberlimit;
-        },
-        setMsgInterval (state, action) {
-            const {msginterval} = action.payload;
-            state.msginterval = msginterval;
         },
         setTopicLevel (state, action) {
             const {topicLevel} = action.payload;

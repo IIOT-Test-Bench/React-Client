@@ -6,6 +6,7 @@ import InfoBox from './InfoBox';
 import Slider from './Slider';
 import io from 'socket.io-client';
 import {subscriberActions} from '../../Settings/Store/SubscriberSlice';
+import {setSimulationConnection, setSimulationButton} from '../../Settings/Store/SettingsSlice';
 
 const socket = io("https://iiot-bench.herokuapp.com", {
         forceNew: true
@@ -14,11 +15,8 @@ const socket = io("https://iiot-bench.herokuapp.com", {
     const ConfigStartDashboard = () => {
       const dispatch = useDispatch();
       
-    const [isConnected, setIsConnected] = useState(false);
-    const [msg, setMsg] = useState(null);
+    let isConnected = useSelector(state => state.settings.isSimulationConnected);
     //Store simulation running values
-    const [simulationOn, setSimulationOn] = useState(false)
-    const [endSocket, setEndSocket] = useState(false)
     const [loading, setLoading] = useState(false);
     const [connectedUsers, setConnectedUsers] = useState(0);
     const [simulationButton, setSimulationButton] = useState("Start Simulation");
@@ -47,7 +45,7 @@ const socket = io("https://iiot-bench.herokuapp.com", {
       //For the client side socket io connection 
             socket.on('connection', () => {
               setLoading(false);
-              setIsConnected(true);
+              dispatch(setSimulationConnection({simulationSignal:true}));
               console.log("testing out");
             });
             socket.on('connectionStatus', (data) => {
@@ -59,7 +57,7 @@ const socket = io("https://iiot-bench.herokuapp.com", {
             })
   
             socket.on('disconnect', () => {
-              setIsConnected(false);
+              dispatch(setSimulationConnection({simulationSignal:false}));
               setLoading(false);
             });
 
@@ -70,7 +68,6 @@ const socket = io("https://iiot-bench.herokuapp.com", {
             });   
         
             socket.on('memory-usage', (data) => {
-              setMsg(data);
               console.log("Memory Usage:", data);
               setMemUsage(data);
             });
@@ -110,32 +107,28 @@ const socket = io("https://iiot-bench.herokuapp.com", {
 
         switch(isConnected){
           case true:
-            setEndSocket(true);
-            setSimulationOn(false);
             socket.emit('stopSimulation', {numOfPubs:numPub});
             // console.log("Stopped logging the info...")
             socket.close();
             //reset subscribed topics when simulation stops
             dispatch(subscriberActions.resetSubscribedTopics());
             document.querySelector("#gear").classList.remove("connected-gear")
-            setIsConnected(false);
+            dispatch(setSimulationConnection({simulationSignal:false}));
             setLoading(false);
-            setSimulationButton("Start Simulation");
+            dispatch(setSimulationButton({simulationText:"Start Simulation"}));
             // console.log(isConnected);
           break;
           case false:
-            setSimulationOn(true);
-            console.log(socket); 
-            // console.log("yesssss");
+            // console.log(socket); 
             socket.open();
             socket.emit("clientId", client, (feedback) => {
               // console.log("Client Id received", feedback)
             });
             socket.emit('startSimulation', {numOfPubs:numPub, pubInterval:pubInterval, pubTopicLevel:pubTopicLevel, numOfSubs:numSub, subTopicLevel:subTopicLevel})
-            setIsConnected(true);
+            dispatch(setSimulationConnection({simulationSignal:true}));
             // console.log(isConnected);
             document.querySelector("#gear").classList.add("connected-gear");
-            setSimulationButton("Stop Simulation");
+            dispatch(setSimulationButton({simulationText:"Stop Simulation"}));
           break;
           default:
         }
@@ -158,9 +151,9 @@ const socket = io("https://iiot-bench.herokuapp.com", {
                         <form>
                             <div className="form-group row">
                             <div className="my-3">
-                            <Slider id={"numpub"} stateVar={numPub} setStateVar={setNumPub} labelVar={"No. of Publisher"} min={"1"} max={"10"}/>
+                            <Slider id={"numpub"} stateVar={numPub} setStateVar={setNumPub} labelVar={"No. of Publisher"} min={"1"} max={"100"}/>
                             <Slider id={"pubinterval"} stateVar={pubInterval} setStateVar={setPubInterval} labelVar={"Interval (ms)"} min={"10"} max={"10000"} step={"1"} />
-                            <Slider id={"pubtopiclevel"} stateVar={pubTopicLevel} setStateVar={setPubTopicLevel} labelVar={"Topic Level"} max={"5"}/>
+                            <Slider id={"pubtopiclevel"} stateVar={pubTopicLevel} setStateVar={setPubTopicLevel} labelVar={"Topic Level"} max={"10"}/>
                             </div>
 
                             <InfoBox tagId={"cpu"} label={"CPU"} value={cpu}/>
@@ -237,8 +230,8 @@ const socket = io("https://iiot-bench.herokuapp.com", {
                     <form>
                             <div className="form-group row">
                             <div className="my-3">
-                            <Slider id={"numsub"} stateVar={numSub} setStateVar={setNumSub} labelVar={"No. of Subscribers"} />
-                            <Slider id={"subtopiclevel"} stateVar={subTopicLevel} setStateVar={setSubTopicLevel} labelVar={"Topic Levels"} />
+                            <Slider id={"numsub"} stateVar={numSub} setStateVar={setNumSub} labelVar={"No. of Subscribers"} min={"1"} max={"100"}/>
+                            <Slider id={"subtopiclevel"} stateVar={subTopicLevel} setStateVar={setSubTopicLevel} labelVar={"Topic Levels"} max={"10"}/>
                             </div>
 
                             <InfoBox tagId={"cpu"} label={"CPU"} value={cpu}/>

@@ -13,7 +13,9 @@ const settings = createSlice({
         connStatus: false,
         connStatusText: "Connect",
         statusCode: "info",
-        connState: "Disconnected"
+        connState: "Disconnected",
+        simulationButton: "Start Simulation",
+        isSimulationConnected: false
     },
     reducers: {
         setCurrentClient(state, action) {
@@ -42,6 +44,14 @@ const settings = createSlice({
             const {connStatusText} = action.payload;
             state.connStatusText = connStatusText;
         },
+        setSimulationConnection(state, action){
+            const {simulationSignal} = action.payload;
+            state.isSimulationConnected = simulationSignal;
+        },
+        setSimulationButton(state, action){
+            const {simulationText} = action.payload;
+            state.simulationButton = simulationText;
+        },
         resetConnection(state, action){
             state.host = "";
             state.port = "";
@@ -67,7 +77,9 @@ const settings = createSlice({
     setConnStatus,
     setConnStatusText,
     setStatusCode, 
-    resetConnection
+    resetConnection,
+    setSimulationConnection, 
+    setSimulationButton
 } = settings.actions;
 
 export default settings;
