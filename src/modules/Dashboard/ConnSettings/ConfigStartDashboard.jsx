@@ -113,13 +113,15 @@ const socket = io("https://iiot-bench.herokuapp.com", {
             setEndSocket(true);
             setSimulationOn(false);
             socket.emit('stopSimulation', {numOfPubs:numPub});
-            console.log("Stopped logging the info...")
+            // console.log("Stopped logging the info...")
             socket.close();
+            //reset subscribed topics when simulation stops
+            dispatch(subscriberActions.resetSubscribedTopics());
             document.querySelector("#gear").classList.remove("connected-gear")
             setIsConnected(false);
             setLoading(false);
             setSimulationButton("Start Simulation");
-            console.log(isConnected);
+            // console.log(isConnected);
           break;
           case false:
             setSimulationOn(true);
@@ -127,11 +129,11 @@ const socket = io("https://iiot-bench.herokuapp.com", {
             // console.log("yesssss");
             socket.open();
             socket.emit("clientId", client, (feedback) => {
-              console.log("Client Id received", feedback)
+              // console.log("Client Id received", feedback)
             });
             socket.emit('startSimulation', {numOfPubs:numPub, pubInterval:pubInterval, pubTopicLevel:pubTopicLevel, numOfSubs:numSub, subTopicLevel:subTopicLevel})
             setIsConnected(true);
-            console.log(isConnected);
+            // console.log(isConnected);
             document.querySelector("#gear").classList.add("connected-gear");
             setSimulationButton("Stop Simulation");
           break;

@@ -29,6 +29,9 @@ const subscriber = createSlice({
         setTopicLevel (state, action) {
             const {topicLevel} = action.payload;
             state.topicLevel = topicLevel;
+        },
+        resetSubscribedTopics (state, action) {
+            state.subscribedTopics = {};
         }
     },
     extraReducers:  {
