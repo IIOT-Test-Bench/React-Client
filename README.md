@@ -28,6 +28,18 @@ Or the app in the development mode.\
 By first cloning the repo, `npm install` and the `npm start`\
 Then open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
+## Diagrams
+
+`DFD Diagram`
+
+![DFD Diagram](/diagrams/dfd.png?raw=true "Optional Title")
+
+`User Interaction`
+
+![DFD Diagram](/diagrams/userinteraction.png?raw=true "Optional Title")
+
+- DFD and User Interactions
+
 ### *`Main connection to the Broker`*
 
 ![Main connect](/pages/IIOTConnPage.png?raw=true "Optional Title")
