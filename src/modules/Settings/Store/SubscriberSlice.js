@@ -4,8 +4,8 @@ const subscriber = createSlice({
     name: "subscriber",
     initialState: {
         clientId: "",
-        numberlimit: 40,
-        topicLevel: 2,        
+        numberlimit: "",
+        topicLevel: "",        
         subscribedTopics: {}
     },
     reducers: {

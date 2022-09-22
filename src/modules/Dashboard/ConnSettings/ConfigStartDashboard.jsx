@@ -6,6 +6,7 @@ import InfoBox from './InfoBox';
 import Slider from './Slider';
 import io from 'socket.io-client';
 import {subscriberActions} from '../../Settings/Store/SubscriberSlice';
+import {setNumberLimit, setMsgInterval, setTopicLevel} from '../../Settings/Store/PublisherSlice';
 import {setSimulationConnection, setSimulationButton} from '../../Settings/Store/SettingsSlice';
 import swal from 'sweetalert';
 
@@ -32,11 +33,11 @@ const socket = io("https://iiot-bench.herokuapp.com", {
     const [netOut, setNetOut] = useState(0);
 
     let client = useSelector((state) => state.settings.clientid);
-    const [numPub, setNumPub] = useState("");
-    const [numSub, setNumSub] = useState(null);
-    const [pubInterval, setPubInterval] = useState("");
-    const [pubTopicLevel, setPubTopicLevel] = useState("");
-    const [subTopicLevel, setSubTopicLevel] = useState(null);
+    const [numPub, setNumPub] = useState(useSelector((state) => state.publisher.numberlimit));
+    const [numSub, setNumSub] = useState(useSelector((state) => state.subscriber.numberlimit));
+    const [pubInterval, setPubInterval] = useState(useSelector((state) => state.publisher.msginterval));
+    const [pubTopicLevel, setPubTopicLevel] = useState(useSelector((state) => state.publisher.msginterval));
+    const [subTopicLevel, setSubTopicLevel] = useState(useSelector((state) => state.publisher.topicLevel));
 
     const [compression, setCompression] = useState(false);
     const [encryption, setEncryption] = useState(false);
@@ -126,6 +127,13 @@ const socket = io("https://iiot-bench.herokuapp.com", {
             });
             socket.emit('startSimulation', {numOfPubs:numPub, pubInterval:pubInterval, pubTopicLevel:pubTopicLevel, numOfSubs:numSub, subTopicLevel:subTopicLevel})
             dispatch(setSimulationConnection({simulationSignal:true}));
+
+            //add values to store
+            dispatch(subscriberActions.setNumberLimit({numberLimit: numSub}));
+            dispatch(setNumberLimit({numberlimit: numPub}));
+            dispatch(setMsgInterval({msginterval: pubInterval}));
+            dispatch(setTopicLevel({topicLevel: pubInterval}));
+
             // console.log(isConnected);
             document.querySelector("#gear").classList.add("connected-gear");
             dispatch(setSimulationButton({simulationText:"Stop Simulation"}));

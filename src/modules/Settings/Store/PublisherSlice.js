@@ -5,9 +5,9 @@ const publisher = createSlice({
     initialState: {
         clientId: "",
         publishedTopics: [],
-        numberlimit: 40,
-        msginterval: 10,
-        topicLevel: 2
+        numberlimit: "",
+        msginterval: "",
+        topicLevel: ""
     },
     reducers: {
         //Would be converted to a thunk to fetch topics from node server topics endpoint
