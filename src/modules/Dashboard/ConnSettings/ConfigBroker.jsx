@@ -84,15 +84,18 @@ const ConfigBroker = () => {
         if(host && port && randId && timeout && username && password){
           let feedback = await connectBroker(host, port, randId, timeout, username, password);
           if(feedback.statusText === "OK"){
-            console.log(feedback)
             dispatch(setConnStatus({connStatus:true}));
             dispatch(setConnState({connState:"Connected"}));
             dispatch(setCurrentClient({host:host, port:port, clientid:randId, timeout:timeout, username:username, password:password}));
             setPreventTyping(true);
           }else{
-            console.log("There was an error")
             dispatch(setConnStatus({connStatus:false}));
             dispatch(setConnState({connState:"Disconnected"}));
+            swal({
+              title: "Wrong values",
+              text: "One or some of the values provided are incorrect, kindly check and reconnect",
+              icon: "warning",
+            });
           }
         }else{
           dispatch(setConnState({connState:"Disconnected"}));

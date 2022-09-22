@@ -3,7 +3,6 @@ import axios from "axios"
 let baseUrl = "https://iiot-bench.herokuapp.com";
 //Connect to a broker through node server api
 export const connectBroker = async (host, port, clientId, timeout, username, password) => {
-
     try{
         const result = await axios.post(`${baseUrl}/connect`, {
             host: host,
@@ -13,9 +12,10 @@ export const connectBroker = async (host, port, clientId, timeout, username, pas
             username: username,
             password: password
         })
-        return result;
+        if(result){
+            return result;
+        }
     }catch(err){
-        console.log("Err msg", err);
         return "Could not connect"
     }
 }
