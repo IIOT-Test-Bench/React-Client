@@ -13,12 +13,10 @@ export const connectBroker = async (host, port, clientId, timeout, username, pas
             username: username,
             password: password
         })
-        console.log(result);
         return result;
-        
-
     }catch(err){
-        console.log(err)
+        console.log("Err msg", err);
+        return "Could not connect"
     }
 }
 

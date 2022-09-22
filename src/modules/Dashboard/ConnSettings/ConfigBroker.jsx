@@ -91,6 +91,8 @@ const ConfigBroker = () => {
             setPreventTyping(true);
           }else{
             console.log("There was an error")
+            dispatch(setConnStatus({connStatus:false}));
+            dispatch(setConnState({connState:"Disconnected"}));
           }
         }else{
           dispatch(setConnState({connState:"Disconnected"}));
