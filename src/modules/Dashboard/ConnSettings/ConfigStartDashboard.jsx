@@ -105,7 +105,6 @@ const socket = io("https://iiot-bench.herokuapp.com", {
       }, []);
     
       const handleSimulation = () => {
-      if(numPub && pubInterval && pubTopicLevel && numSub){
         switch(isConnected){
           case true:
             socket.emit('stopSimulation', {numOfPubs:numPub});
@@ -140,13 +139,6 @@ const socket = io("https://iiot-bench.herokuapp.com", {
           break;
           default:
           }
-        }else{
-          swal({
-            title: "Empty Slider Values",
-            text: "Kindly set values for all the sliders",
-            icon: "warning",
-          });
-        }
       }
     
   return (
