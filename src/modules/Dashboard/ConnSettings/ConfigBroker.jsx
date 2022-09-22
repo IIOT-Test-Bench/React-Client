@@ -84,10 +84,13 @@ const ConfigBroker = () => {
         if(host && port && randId && timeout && username && password){
           let feedback = await connectBroker(host, port, randId, timeout, username, password);
           if(feedback.statusText === "OK"){
+            console.log(feedback)
             dispatch(setConnStatus({connStatus:true}));
             dispatch(setConnState({connState:"Connected"}));
             dispatch(setCurrentClient({host:host, port:port, clientid:randId, timeout:timeout, username:username, password:password}));
             setPreventTyping(true);
+          }else{
+            console.log("There was an error")
           }
         }else{
           dispatch(setConnState({connState:"Disconnected"}));
